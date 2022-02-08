@@ -4,7 +4,7 @@ Runs on https://sg.solace.com/bus
 
 Some modifications from aaron-613's original bus demo
 
-* To Run in Docker *
+## To Run in Docker:
 ```
 $ docker build . -t solacedemoweb:1.0
 $ docker run --name solwebdemo -p 80:80 \
