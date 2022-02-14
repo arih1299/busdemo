@@ -5,7 +5,7 @@
   <title>Solace Real-time Connected Buses Demo</title>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
-  <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
   <style>
     html,
     body {
@@ -13,6 +13,7 @@
       margin: 0px;
       padding: 0px
     }
+
     #map-canvas {
       height: 100%;
       margin: 0px;
@@ -20,81 +21,110 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+  <!--script type="text/javascript" src="marker_with_label.js"></script-->
+  <!-- <script type="text/javascript" src="qrcode.min.js"></script> -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAW6283JLNz9MMC2d0-34O7ipdqpGDWWeg&v=3.exp&libraries=visualization"></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9JGEC8ucg3DFD2gSdyqDIptMLkkHKfqM&v=3.exp&libraries=visualization"></script> -->
   <script type="text/javascript" src="solclient-full.js"></script>
   <script type="text/javascript" src="resources/config.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAW6283JLNz9MMC2d0-34O7ipdqpGDWWeg&v=3.exp&libraries=visualization"></script>
   <style>
     #wrapper {
       position: relative;
     }
-    #over_map_config {
-      position: absolute;
-      top: 60px;
-      left: 10px;
-      z-index: 99;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 10px;
+
+    #topicMO {
+      position:absolute;
+      /* background-color: rgba(255, 255, 255, 0.9);
       border: 1px solid #999;
-      font-family: 'sans-serif';
-      line-height: 30px;
-      padding-left: 10px;
-    }
-    #over_map_tl {
-      position: absolute;
-      top: 300px;
-      left: 10px;
-      z-index: 99;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 10px;
-      border: 1px solid #999;
-      font-family: 'sans-serif';
-      line-height: 30px;
-      padding-left: 10px;
-    }
-    #over_map_tr {
-      position: absolute;
-      top: 9px;
-      right: 60px;
-      z-index: 99;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 10px;
-      border: 1px solid #999;
-      font-family: 'sans-serif';
-      line-height: 30px;
-      padding-left: 10px;
-    }
-    #over_map_tr_qr {
-      position: absolute;
-      top: 120px;
-      right: 10px;
-      z-index: 99;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 10px;
+      font-family: 'sans-serif'; */
+      background-color: rgba(51, 51, 51, 0.9);
+      /* border: 1px solid #00c895; */
       border: 1px solid #FF7F27;
       font-family: 'sans-serif';
-      line-height: 30px;
-      padding-left: 10px;
+      padding: 4px 10px 5px 10px;
+      /* line-height: 30px;
+      padding-left: 10px; */
+      top: 10px;
+      left: 10px;
     }
-   #over_map_bl {
+
+    #real-time-topics {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      margin-left: -300px; /* approx */
+      background-color: rgba(51, 51, 51, 0.9);
+      /* border: 1px solid #00c895; */
+      border: 1px solid #00c895;
+      /* border: 1px solid #FF7F27; */
+      padding: 2px 8px 3px 8px;
+      /* margin: auto; */
+      /* margin-left: auto;
+      margin-right: auto; */
+    }
+
+    #over_map_filtering {
       position: absolute;
-      bottom: 40px;
+      top: 10px;
       left: 10px;
       z-index: 99;
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(61, 61, 61, 0.9);
       padding: 10px;
-      border: 1px solid #999;
+      border: 1px solid #00c895;
       font-family: 'sans-serif';
       line-height: 30px;
       padding-left: 10px;
     }
-    #over_map_br {
+
+    #over_map_tr {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 98;
+      background-color: rgba(61, 61, 61, 0.9);
+      padding: 10px;
+      border: 1px solid #00c895;
+      font-family: 'sans-serif';
+      line-height: 30px;
+      padding-left: 10px;
+    }
+
+    #over_map_busapp_qr {
       position: absolute;
       bottom: 24px;
       right: 60px;
       z-index: 99;
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(61, 61, 61, 0.9);
       padding: 10px;
-      border: 1px solid #FF7F27;
+      border: 1px solid #00c895;
+      /* border: 1px solid #FF7F27; */
+      font-family: 'sans-serif';
+      line-height: 30px;
+      padding-left: 10px;
+    }
+
+    #over_map_bl {
+      position: absolute;
+      bottom: 35px;
+      left: 10px;
+      z-index: 99;
+      background-color: rgba(61, 61, 61, 0.9);
+      padding: 10px;
+      border: 1px solid #00c895;
+      font-family: 'sans-serif';
+      line-height: 30px;
+      padding-left: 10px;
+    }
+
+    #over_map_fence {
+      position: absolute;
+      bottom: 24px;
+      right: 235px;
+      z-index: 99;
+      background-color: rgba(61, 61, 61, 0.9);
+      padding: 10px;
+      border: 1px solid #00c895;
+      /* border: 1px solid #FF7F27; */
       font-family: 'sans-serif';
       line-height: 30px;
       padding-left: 10px;
@@ -102,31 +132,38 @@
 
     h1 {
       font: 18pt Roboto, sans-serif;
-      color: #000000;
+      color: #ffffff;
       padding: 2px;
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
     h2 {
       font: 14pt Roboto, sans-serif;
-      color: #000000;
+      color: #ffffff;
       padding: 2px;
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
     h3 {
       font: 12pt Roboto, sans-serif;
-      color: #000000;
+      color: #ffffff;
       padding: 2px;
       margin-top: 0px;
       margin-bottom: 0px;
     }
-    p,td {
+
+    p, td, a {
       font: 9pt Roboto, sans-serif;
-      color: #000000;
+      color: #ffffff;
       padding: 0px;
       margin-top: 1px;
       margin-bottom: 1px;
+    }
+
+    a:hover {
+      color: #f4961c;
     }
 
     .orange_o {
@@ -167,22 +204,78 @@
     }
 
 
-
+/* 
     .sliders {
       font: 16pt Haettenschweiler, Impact, fantasy;
       color: #003b74;
     }
+ */
+
+
     .newSliders {
       font: 9pt Roboto, sans-serif;
-      color: #000000;
+      color: #fff;
     }
+
+    input[type=text], select {
+      color: #ffffff;
+      border: 2px solid #00c895;
+      border-radius: 10px;
+      background-color: rgba(61, 61, 61, 0.9);
+    }
+
+    button {
+      color: #fff;
+      border: 2px solid #00c895;
+      border-radius: 10px;
+      background-color: rgba(61, 61, 61, 0.9);
+    }
+
+    button:hover {
+      background-color: #00c895;
+      border: 2px solid rgba(61, 61, 61, 0.9);
+      color: rgba(61, 61, 61, 0.9);
+    }
+
+    /* copied from aaron's sunburst diagram */
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 11px; /* Set a specific slider handle width */
+  height: 11px; /* Slider handle height */
+  border-radius: 6px;
+  background: #00c895; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+  /* border: 2px solid rgba(0, 0, 0, 0.5); */
+}
+
+
+
+/* The slider itself */
+.slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+
+  /*-webkit-appearance: none;*/  /* Override default CSS styles */
+  /*appearance: none;*/
+  width: 120px; /* Full-width */
+  height: 3px; /* Specified height */
+  background: #00c895;
+  outline: none; /* Remove outline */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+  /* padding-bottom: 5px; */
+}
+
+
   </style>
   <script>
     // This example adds a user-editable rectangle to the map.
 
     var map;
     var heatmap;
-    var searchShapes = {"poly":[],"circle":[],"rect":[]};  // used to be just poly and circle
+    var searchShapes = { "poly": [], "circle": [], "rect": [] };  // used to be just poly and circle
     var totalSearchShapes = 0;
     var dragging = false;  // ignore the set_at events from the shapes when they're being dragged
     var poly;
@@ -221,14 +314,44 @@
       anchor: { x: 7, y: 7 }
     };
 
-    var icon_bus_small_ok = { url: "bus_small_ok.png", anchor: { x: 4, y: 4 }};
-    var icon_bus_small_stop = { url: "bus_small_stop.png", anchor: { x: 4, y: 4 }};
-    var icon_bus_small_msg = { url: "bus_small_msg.png", anchor: { x: 4, y: 4 }};
-    var icon_bus_small_fault = { url: "bus_small_fault.png", anchor: { x: 4, y: 4 }};
-    var icon_bus_med_ok = { url: "bus_med_ok.png", anchor: { x: 8, y: 8 }};
-    var icon_bus_med_stop = { url: "bus_med_stop.png", anchor: { x: 8, y: 8 }};
-    var icon_bus_med_msg = { url: "bus_med_msg.png", anchor: { x: 8, y: 8 }};
-    var icon_bus_med_fault = { url: "bus_med_fault.png", anchor: { x: 8, y: 8 }};
+    var icon_bus_small_ok = { url: "green_small_ok.png", anchor: { x: 4, y: 4 } };
+    var icon_bus_small_stop = { url: "green_small_stop.png", anchor: { x: 4, y: 4 } };
+    var icon_bus_small_msg = { url: "green_small_msg.png", anchor: { x: 4, y: 4 } };
+    var icon_bus_small_fault = { url: "green_small_fault.png", anchor: { x: 4, y: 4 } };
+    var icon_bus_med_ok = { url: "green_med_ok.png", anchor: { x: 8, y: 8 } };
+    var icon_bus_med_stop = { url: "green_med_stop.png", anchor: { x: 8, y: 8 } };
+    var icon_bus_med_msg = { url: "green_med_msg.png", anchor: { x: 8, y: 8 } };
+    var icon_bus_med_fault = { url: "green_med_fault.png", anchor: { x: 8, y: 8 } };
+
+
+    // const subsColor = '#4488ff';
+    // const shapeColor = '#4488ff';
+    // const subsColor = '#ff8800';
+    // const shapeColor = '#ff8800';
+    const subsColor = '#FF7F27';
+    const shapeColor = '#FF7F27';
+    const levelColors = [ '#fff', '#5f5', '#f5f', '#0ff', '#ff0', '#58f', '#f55' ];
+    /*
+            <span style="color:#fff">geo</span
+          >/<span style="color:#5f5;">bus</span
+          >/<span style="color:#f5f;">{busNum}}</span
+          >/<span style="color:#05f;">{lat}</span
+          >/<span style="color:#ff0;">{lon}</span
+          >/<span style="color:#0ff;">{routeNum}</span
+          >/<span style="color:#f55;">{status}</span>
+*/
+    function makeHtmlColors(topic) {
+      // we're assuming that the span has color grey for / chars
+      var levels = topic.split("/");
+      var str = "";
+      for (var i=0; i<levels.length; i++) {
+        str += "<span style=\"color: "+levelColors[i]+";\">" + levels[i] + "</span>";
+        if (i < levels.length-1) str += "/";
+      }
+      if (levels.length < 7) str += "<span style=\"color: "+levelColors[0]+";\">&gt;</span>";
+      return str;
+    }
+
 
 
     function initialize() {
@@ -236,30 +359,423 @@
         center: new google.maps.LatLng(1.3, 103.85), // Singapore
         zoom: 13, // demo
         draggable: true,
-        mapTypeId: 'satellite',
+        // mapTypeId: 'satellite',
         mapTypeControlOptions: {
-          mapTypeIds: ['coordinate', 'roadmap'],
-          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+          // mapTypeIds: ['coordinate', 'roadmap'],
+          // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
         },
+        mapTypeControl: false,
+        fullscreenControl: false,
+        streetViewControl: false,
         scaleControl: true,
         drawable: true,
         clickable: false,
-        mapTypeControlOptions: {
+        // mapTypeControlOptions: {
           //mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
-        }
+        // }
+        styles: [
+          {
+            featureType: "all",
+            "elementType": "all",
+            "stylers": [
+              {
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "all",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              },
+              {
+                "saturation": "-100"
+              }
+            ]
+          },
+          {
+            "featureType": "all",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "saturation": 36
+              },
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 40
+              },
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "all",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "visibility": "off"
+              },
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 16
+              }
+            ]
+          },
+          {
+            "featureType": "all",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "administrative",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 20
+              }
+            ]
+          },
+          {
+            "featureType": "administrative",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 17
+              },
+              {
+                "weight": 1.2
+              }
+            ]
+          },
+          {
+            "featureType": "landscape",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 20
+              }
+            ]
+          },
+          {
+            "featureType": "landscape",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // color: "#4d6059"
+                color: "#333333"
+              }
+            ]
+          },
+          {
+            "featureType": "landscape",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                // "color": "#4d6059"
+                "color": "#ff0000"
+              }
+            ]
+          },
+          {
+            "featureType": "landscape.natural",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // "color": "#4d6059"
+                "color": "#333333"
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                // "lightness": 21
+                "lightness": 51
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // "color": "#4d6059"
+                "color": "#333333"
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                // "color": "#4d6059"
+                "color": "#333333"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "visibility": "on"
+              },
+              {
+                // "color": "#7f8d89"
+                "color": "#666666"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // "color": "#7f8d89"
+                "color": "#666666"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // "color": "#7f8d89"
+                "color": "#666666"
+              }
+              // ,
+              // {
+              //   "lightness": 17
+              // }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                // "color": "#7f8d89"
+                "color": "#666666"
+              },
+              {
+                "visibility": "off"
+              }
+
+            ]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 18
+              }
+            ]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // "color": "#7f8d89"
+                "color": "#555555"
+              }
+            ]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                // "color": "#7f8d89"
+                "color": "#666666"
+              },
+              {
+                "visibility": "off"
+              }
+
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 16
+              }
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // "color": "#7f8d89"
+                "color": "#444444"
+              }
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                // "color": "#7f8d89"
+                "color": "#6666ff"
+              },
+              {
+                "visibility": "off"
+              }
+
+            ]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#000000"
+              },
+              {
+                "lightness": 19
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "all",
+            "stylers": [
+              {
+                // "color": "#2b3638"
+                "color": "#20262a"
+              },
+              {
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                // "color": "#2b3638"
+                "color": "#20262a"
+              },
+              {
+                "lightness": 17
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                // "color": "#24282b"
+                "color": "#20262a"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry.stroke",
+            "stylers": [
+              {
+                // "color": "#24282b"
+                "color": "#20262a"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          }
+]
+
 
       };
-      directionsDisplay = new google.maps.DirectionsRenderer();
+      // directionsDisplay = new google.maps.DirectionsRenderer();
       map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
       //map.mapTypes.set('map_style', styledMap);
       map.setMapTypeId('terrain');
 
       //map.setMapTypeId('map_style');
-      directionsDisplay.setMap(map);
+      // directionsDisplay.setMap(map);
 
 
       // Construct a draggable red polygon
-
 
       boundary = [];
       for (var i = 0; i < 2; i++) { // there's two because there are two shapes... need to change
@@ -279,17 +795,21 @@
       }
 
       subs2 = [];
-      var color = '#0000ff';
-      var factor = 2;
+      // var color = '#0000ff';
+      //var color = '#f37021';
+      // var color = '#009193';
+      // var factor = 2;
       for (var i = 0; i < MAX_TOPICS; i++) {
         subs2[i] = new google.maps.Rectangle({
           title: "Hello there " + i,
-          strokeColor: color,
-          strokeOpacity: 1.0 - (factor * 0.15),
-          strokeWeight: 1.2 - (factor * 0.2),
-          fillColor: color,
+          strokeColor: subsColor,
+          // strokeOpacity: 1.0 - (factor * 0.15),
+          // strokeWeight: 1.2 - (factor * 0.2),
+          strokeOpacity: 0.5,
+          strokeWeight: 1,
+          fillColor: subsColor,
           fillOpacity: 0.05,
-          zIndex: factor,
+          zIndex: 1000000, //factor,
           clickable: true,
         });
       }
@@ -317,11 +837,11 @@
 
 
       zoomLevel = map.getZoom();
-      google.maps.event.addListener(map, 'zoom_changed', function() {
+      google.maps.event.addListener(map, 'zoom_changed', function () {
         console.log("Zoom changed!!  from " + zoomLevel + " to " + map.getZoom());
         if (heatmap.getMap() && map.getZoom() < 13) heatmap.setMap(null);
         if (zoomLevel >= 13 && map.getZoom() <= 12 ||
-            zoomLevel <= 12 && map.getZoom() >= 13) { // crossing a threshold
+          zoomLevel <= 12 && map.getZoom() >= 13) { // crossing a threshold
           for (key in vehicles) {
             var vehicle = vehicles[key];
             if (vehicle["type"] == "bus") {
@@ -339,7 +859,7 @@
         radius: 0.003,
         dissipating: false,
       });
-      setInterval(function() {
+      setInterval(function () {
         var points = [];
         for (var key in vehicles) {
           if (vehicles[key]["marker"].getMap() != null) points.push(vehicles[key]["pos"]);
@@ -356,11 +876,12 @@
       // console.log(map.getBounds());//.lat+ "   -   "+map.getCenter().lon);
       // var rLat = (Math.random() * 0.05) + map.getCenter().lat;
       // var rLng = (Math.random() * 0.1) + map.getCenter().lng;
-      return new google.maps.LatLng(rLat,rLng);  // a random point, somewhere centralish
+      return new google.maps.LatLng(rLat, rLng);  // a random point, somewhere centralish
     }
 
     function getPointNearPoint(point) {
-      var angle = Math.random() * 2 * Math.PI;
+      // var angle = Math.random() * 2 * Math.PI;
+      var angle = (Math.random() * Math.PI / 8) + (Math.PI / 16) * (Math.random() * 4);  // 45 deg arcs, in each of the 4 quadrants
       var dist = (Math.random() + 0.5) * 0.05;
       return new google.maps.LatLng(point.lat() + (Math.cos(angle) * dist), point.lng() + (Math.sin(angle) * dist));
     }
@@ -368,19 +889,19 @@
     function addNewPoly() {
       var p1 = getRandomPoint();
       var p2 = getPointNearPoint(p1);
-      var latDist = p1.lat()-p2.lat();
-      var lngDist = p1.lng()-p2.lng();
-      var mid = new google.maps.LatLng((p1.lat()+p2.lat())/2,(p1.lng()+p2.lng())/2);
-      var p3 = new google.maps.LatLng(((p1.lat()+p2.lat())/2) + lngDist,((p1.lng()+p2.lng())/2) - latDist);
-      var coords = [p1,p3,p2];
-      if (Math.random() < 0.5) coords.push(new google.maps.LatLng(((p1.lat()+p2.lat())/2) - lngDist,((p1.lng()+p2.lng())/2) + latDist));
+      var latDist = p1.lat() - p2.lat();
+      var lngDist = p1.lng() - p2.lng();
+      var mid = new google.maps.LatLng((p1.lat() + p2.lat()) / 2, (p1.lng() + p2.lng()) / 2);
+      var p3 = new google.maps.LatLng(((p1.lat() + p2.lat()) / 2) + lngDist, ((p1.lng() + p2.lng()) / 2) - latDist);
+      var coords = [p1, p3, p2];
+      if (Math.random() < 0.5) coords.push(new google.maps.LatLng(((p1.lat() + p2.lat()) / 2) - lngDist, ((p1.lng() + p2.lng()) / 2) + latDist));  // triangle -> parallogram
       var poly = new google.maps.Polygon({
         map: map,
         paths: coords,
-        strokeColor: '#FF0000',
+        strokeColor: shapeColor,
         strokeOpacity: 0.7,
         strokeWeight: 3,
-        fillColor: '#FF0000',
+        fillColor: shapeColor,
         fillOpacity: 0.025,
         visible: true,
         draggable: true,
@@ -407,9 +928,9 @@
         map: map,
         center: getRandomPoint(),
         radius: 500 + (Math.random() * 2000),
-        strokeColor: '#FF0099',
+        strokeColor: shapeColor,//'#FF0099',
         strokeOpacity: 0.7,
-        fillColor: '#FF0099',
+        fillColor: shapeColor,//'#FF0099',
         fillOpacity: 0.025,
         draggable: true,
         clickable: true,
@@ -432,15 +953,15 @@
         map: map,
         // bounds: new google.maps.LatLngBounds(p1,p2),
         bounds: {
-          north: Math.max(p1.lat(),p2.lat()),
-          south: Math.min(p1.lat(),p2.lat()),
-          east:  Math.max(p1.lng(),p2.lng()),
-          west:  Math.min(p1.lng(),p2.lng()),
+          north: Math.max(p1.lat(), p2.lat()),
+          south: Math.min(p1.lat(), p2.lat()),
+          east: Math.max(p1.lng(), p2.lng()),
+          west: Math.min(p1.lng(), p2.lng()),
         },
-        strokeColor: '#FF6600',
+        strokeColor: shapeColor,//'#FF6600',
         strokeOpacity: 0.7,
         strokeWeight: 3,
-        fillColor: '#FF6600',
+        fillColor: shapeColor,//'#FF6600',
         fillOpacity: 0.025,
         visible: true,
         draggable: true,
@@ -461,7 +982,7 @@
           searchShapes[key][i].setMap(null);
         }
       }
-      searchShapes = {"poly":[],"circle":[],"rect":[]};
+      searchShapes = { "poly": [], "circle": [], "rect": [] };
       totalSearchShapes = 0;
       updateSearch();
     }
@@ -476,6 +997,7 @@
     function getColorForShape(what) {
       //http://bonsaiden.github.io/JavaScript-Garden/#types
       // Object.prototype.toString.call(obj).slice(8, -1);
+      return shapeColor;
       if (what == "rect") return '#FF6600';
       else if (what == "circle") return '#FF0099';
       else if (what == "poly") return '#FF0000';
@@ -490,9 +1012,9 @@
               strokeColor: '#aaaaaa',
               editable: false,
               draggable: false,
-          });
+            });
+          }
         }
-      }
         // should disable the user inputs as well
         // document.querySelector('#display').disabled = true;
         // document.querySelector('#addRectButton').disabled = true;
@@ -559,11 +1081,11 @@
       var ne = vertices.getNorthEast();
       var sw = vertices.getSouthWest();
       var coords = [];
-      coords.push([ne.lat(),ne.lng()]);
-      coords.push([ne.lat(),sw.lng()]);
-      coords.push([sw.lat(),sw.lng()]);
-      coords.push([sw.lat(),ne.lng()]);
-      var rectObj = { "coords":coords};
+      coords.push([ne.lat(), ne.lng()]);
+      coords.push([ne.lat(), sw.lng()]);
+      coords.push([sw.lat(), sw.lng()]);
+      coords.push([sw.lat(), ne.lng()]);
+      var rectObj = { "coords": coords };
       // console.log("This is what I send to the subscription manager: RECT='"+JSON.stringify(rectObj)+"'");
       return rectObj;
     }
@@ -574,9 +1096,9 @@
       var coords = [];
       for (var i = 0; i < vertices.getLength(); i++) {
         var xy = vertices.getAt(i);
-        coords.push([xy.lat().toFixed(7)*1,xy.lng().toFixed(7)*1]);
+        coords.push([xy.lat().toFixed(7) * 1, xy.lng().toFixed(7) * 1]);
       }
-      var polyObj = {"coords":coords};
+      var polyObj = { "coords": coords };
       // console.log("This is what I send to the subscription manager: POLY='"+JSON.stringify(polyObj)+"'");
       return polyObj;
     }
@@ -584,9 +1106,9 @@
     function getCircleCoords(circle) {
       var xy = circle.getCenter();
       var circleObj = {};
-      circleObj["coords"] = [xy.lat().toFixed(7)*1,xy.lng().toFixed(7)*1];
+      circleObj["coords"] = [xy.lat().toFixed(7) * 1, xy.lng().toFixed(7) * 1];
       // convert meters to lat/lon: https://stackoverflow.com/questions/8586635/convert-meters-to-latitude-longitude-from-any-point
-      circleObj["radius"] = circle.getRadius().toFixed(1)*1;
+      circleObj["radius"] = circle.getRadius().toFixed(1) * 1;
       circleObj["modifier"] = "metresToLatLon"
       // console.log("This is what I send to the subscription manager: CIRCLE='"+JSON.stringify(circleObj)+"'");
       return circleObj;
@@ -606,6 +1128,41 @@
         subs2[i].setBounds(new google.maps.LatLngBounds(
           new google.maps.LatLng(innerLat, innerLon),
           new google.maps.LatLng(outerLat, outerLon)));
+
+        // new stuff for topic sub mouseover display
+        var m = innerLat.match(/^(-?)(\d+)\.?(\d*)$/);
+        var m2 = outerLat.match(/^(-?)(\d+)\.?(\d*)$/);
+        var topicLat = m[1] ? "-" : "0";
+        topicLat += m[2].padStart(2, "0");
+        topicLat += ".";  // even in teh new version this doesn't hold true
+        if (m[3]) topicLat += m[3];
+        topicLat.padEnd(m2[3].length - m[3].length, "0");
+        var topicLon = innerLon;//.toFixed(5);
+        m = innerLon.match(/^(-?)(\d+)\.?(\d*)$/);
+        m2 = outerLon.match(/^(-?)(\d+)\.?(\d*)$/);
+        var topicLon = m[1] ? "-" : "0";
+        topicLon += m[2].padStart(3, "0");
+        topicLon += ".";  // even in teh new version this doesn't hold true
+        if (m[3]) topicLon += m[3];
+        topicLon.padEnd(m2[3].length - m[3].length, "0");
+        subs2[i]['_data_'] = oldRequestObj.topicPrefix + topicLat + "*/" + topicLon + "*/" + oldRequestObj.topicSuffix;// + "  (" + innerLat + "," + outerLat + "; " + (outerLat - innerLat);
+
+        subs2[i].addListener("mouseover", function (event) {
+          this.setOptions({ fillOpacity: 0.1, strokeOpacity: 1 });
+          let topicSub = document.getElementById('topicMO');
+          topicSub.innerHTML = makeHtmlColors(this._data_);
+        });
+        subs2[i].addListener("mousemove", function (event) {
+          let circle = document.getElementById('topicMO');
+          circle.style.left = (event.domEvent.x + 30) + 'px';
+          circle.style.top = (event.domEvent.y + 20) + 'px';
+          circle.style.display = "block";
+        });
+        google.maps.event.addListener(subs2[i], "mouseout", function () {
+          this.setOptions({ fillOpacity: 0.05, strokeOpacity: 0.5 });
+          let circle = document.getElementById('topicMO');
+          circle.style.display = "none";
+        });
         subs2[i].setMap(map);
         // google.maps.event.addListener(subs2[i], "mousemove", function(event) {
         //   var lat = event.latLng.lat();
@@ -625,17 +1182,21 @@
         // });
       }
       setWorking(false); // done
-      console.log(lastResults);
-    try {
-      var match = lastResults.match("Num Subs = (\\d+), Coverage Ratio = ([0-9.]+)%");
-      document.getElementById('curSubs').innerHTML = match[1];
-      document.getElementById('curAccuracy').innerHTML = match[2];
-    } catch (e) {
-console.log(e);
-    }
+      console.log("lastResults: " + lastResults);
+      try {
+        var match = lastResults.match("Num Subs = (\\d+), Coverage Ratio = ([0-9.]+)%");
+        if (match[1] == 1) {
+          document.getElementById('curSubs').innerHTML = match[1];
+        } else {
+          document.getElementById('curSubs').innerHTML = "<span style=\"color:#FF7F27;\">" + match[1] + "</span>";
+        }
+        document.getElementById('curAccuracy').innerHTML = match[2];
+      } catch (e) {
+        console.log(e);
+      }
     }
 
-// this is for the outline
+    // this is for the outline
     function updateSubsBoundary(newSubCoords) {
       //subCoordsText = newSubCoords;
       var coords = newSubCoords.split("|");
@@ -691,8 +1252,8 @@ console.log(e);
     var requestTopic = 'request/geo_filter';
     var connected = false;
     var working = false;
-    var fenceUid = ""+(Math.random() + 1).toString(36).substring(2,6);  // generate a "random" [0-9a-z] 4 char ID
-    console.log("Fence UID: "+fenceUid);
+    var fenceUid = "" + (Math.random() + 1).toString(36).substring(2, 6);  // generate a "random" [0-9a-z] 4 char ID
+    console.log("Fence UID: " + fenceUid);
 
     var sessionEventCb; // forward declaration
     var messageEventCb; // forward declaration
@@ -705,7 +1266,7 @@ console.log(e);
      * @param queryType
      * @return {solace.Message} message
      */
-    this.createRequestMsg = function(polyCoordStr) {
+    this.createRequestMsg = function (polyCoordStr) {
       var msg = solace.SolclientFactory.createMessage();
       // Set the topic to requestTopic
       msg.setDestination(solace.SolclientFactory.createTopic(requestTopic));
@@ -722,7 +1283,7 @@ console.log(e);
      * Invoked when the Ok button is clicked on the login dialog. This method will trigger the creation and connect()
      * operation on the session. When successfully connected, handle_sessionConnected() is invoked
      */
-    this.onLogin = function() {
+    this.onLogin = function () {
       // log to console
       //        var msg = "Creating Session: [ url='" + ns.utils_getUrl() + "', " +
       //                "user='" + ns.utils_getUserName() + ", vpn='" + ns.utils_getVPN() + "']";
@@ -738,27 +1299,22 @@ console.log(e);
         mySessionProperties.vpnName = solconfig.vpn;
         mySessionProperties.userName = solconfig.user;
         mySessionProperties.password = solconfig.pass;
-        // below are used if we're using user input for the values
-        // mySessionProperties.url = document.getElementById("solurl").value;
-        // mySessionProperties.vpnName = document.getElementById("solvpn").value;
-        // mySessionProperties.userName = document.getElementById("soluser").value;
-        // mySessionProperties.password = document.getElementById("solpass").value;
 
         mySessionProperties.includeSenderId = true;
         //            myNickName = mySessionProperties.clientName = ns.utils_getNickName();
 
         mySession = solace.SolclientFactory.createSession(mySessionProperties,
-          new solace.MessageRxCBInfo(function(session, message) {
+          new solace.MessageRxCBInfo(function (session, message) {
             messageEventCb(session, message);
           }, this),
-          new solace.SessionEventCBInfo(function(session, event) {
+          new solace.SessionEventCBInfo(function (session, event) {
             sessionEventCb(session, event);
           }, this));
         console.log("Session was successfully created.");
         // Connect it
         mySession.connect();
         // start a background process to slowly facde out icons
-        setInterval(function() {
+        setInterval(function () {
           const dateNow = Date.now();
           var markedForDeletion = [];
           for (var key in vehicles) {
@@ -779,7 +1335,7 @@ console.log(e);
             // console.log("<<< BUS EXIT:  "+i);
             if (connected) {
               var message = solace.SolclientFactory.createMessage();
-              var topicName = "geo/fence/"+fenceUid+"/exit/"+i+"/"+(""+vehicles[i].payload.routeNum).padStart(3,'0');
+              var topicName = "geo/fence/" + fenceUid + "/exit/" + i + "/" + ("" + vehicles[i].payload.routeNum).padStart(3, '0');
               message.setDestination(solace.SolclientFactory.createTopic(topicName));
               var newPayload = JSON.parse(JSON.stringify(vehicles[i].payload));
               newPayload['fenceStatus'] = "exit";
@@ -788,10 +1344,10 @@ console.log(e);
               message.setDeliveryMode(solace.MessageDeliveryModeType.DIRECT);
               // console.log('Publishing message "' + JSON.stringify(payload) + '" to topic "' + topicName + '"...');
               try {
-                  mySession.send(message);
-                  // console.log('Message published.');
+                mySession.send(message);
+                // console.log('Message published.');
               } catch (e) {
-                  console.error(e.toString());
+                console.error(e.toString());
               }
             }
             delete vehicles[i];
@@ -810,8 +1366,8 @@ console.log(e);
       lastMsgCount = 0;
       discardCount = 0;
       //setTimeout(function(){ alert("Click 'Remove all shapes' to start the bus demo."); },3000);
-      setTimeout(clearAllShapes,3000);
-      setInterval(function() {
+      setTimeout(clearAllShapes, 3000);
+      setInterval(function () {
         if (!connected) return;
         var curMsgs = mySession.getStat(solace.StatType.RX_TOTAL_DATA_MSGS);
         var delta = (curMsgs - lastMsgCount);// * 2 + (lastMsgCount % 2);
@@ -819,13 +1375,13 @@ console.log(e);
         discardCount = mySession.getStat(solace.StatType.RX_DISCARD_MSG_INDICATION);
         //console.log("Message rate: "+delta+",  Discard count: "+discardCount);
         //document.getElementById('rate').innerHTML = '<i><u>another</u></i>';
-        document.getElementById('rate').innerHTML = ''+delta;
+        document.getElementById('rate').innerHTML = '' + delta;
         // also show how many buses we're currently tracking
-        document.getElementById('totalBuses').innerHTML = ''+Object.keys(vehicles).length;
+        document.getElementById('totalBuses').innerHTML = '' + Object.keys(vehicles).length;
       }, 1000);  // once a second
     };
 
-    this.getGeoSearchParams = function() {
+    this.getGeoSearchParams = function () {
       var params = {};
       params["accuracy"] = accuracy;
       params["numSubs"] = numSubs;
@@ -851,7 +1407,7 @@ console.log(e);
       if (statusFilter == "any") suffix += ">";
       else suffix += statusFilter;
       params["topicSuffix"] = suffix;
-      console.log(prefix+"  -  "+suffix);
+      console.log(prefix + "  -  " + suffix);
       return params;
       // var paramStr = "accuracy=" + accuracy + ";";
       // paramStr += "numSubs=" + numSubs + ";";
@@ -860,7 +1416,7 @@ console.log(e);
       // return paramStr;
     }
 
-    this.onPolyChange = function() {
+    this.onPolyChange = function () {
       if (!connected) return;
       if (working) return;
       setWorking(true);
@@ -872,27 +1428,37 @@ console.log(e);
       try {
         var requestObj = {};
         requestObj["shapes"] = getShapeCoords();
-        Object.assign(requestObj,getGeoSearchParams());
+        Object.assign(requestObj, getGeoSearchParams());
         if (JSON.stringify(requestObj) == JSON.stringify(oldRequestObj)) {
           console.log("exact same search, not doing anything");
           setWorking(false);
           return;
         }
-        if (totalSearchShapes > 0) document.getElementById("over_map_br").style.display = "block";
-        else document.getElementById("over_map_br").style.display = "none";
+        if (totalSearchShapes > 0) document.getElementById("over_map_fence").style.display = "block";
+        else document.getElementById("over_map_fence").style.display = "none";
         for (var i = 0; i < 2; i++) {
           boundary[i].setMap(null);
         }
         var prevRequestObj = oldRequestObj; // take a copy of what was asked for previously
         oldRequestObj = requestObj; // copy the new request for the record
         var newRequestObj = {}
-        Object.assign(newRequestObj,requestObj);
+        Object.assign(newRequestObj, requestObj);
         newRequestObj["previous"] = prevRequestObj;
-        console.log("Request string: "+JSON.stringify(newRequestObj));
+        console.log("Request string: " + JSON.stringify(newRequestObj));
+        // new stuff, for updating subscription 
+        console.log(requestObj);
+        if (requestObj.shapes.polys || requestObj.shapes.circles) {
+          console.log("shapes");
+          document.getElementById("sub").innerHTML = makeHtmlColors(requestObj.topicPrefix + "{lat}/{lon}/" + requestObj.topicSuffix);
+        } else {
+          console.log("no shapes");
+          document.getElementById("sub").innerHTML = makeHtmlColors(requestObj.topicPrefix + "*/*/" + requestObj.topicSuffix);
+        }
+
         var msg = createRequestMsg(JSON.stringify(newRequestObj));
-        mySession.sendRequest(msg, REQUEST_TIMEOUT, function(session, message) {
+        mySession.sendRequest(msg, REQUEST_TIMEOUT, function (session, message) {
           replyReceivedCb(session, message);
-        }, function(session, event) {
+        }, function (session, event) {
           replyFailedCb(session, event);
         }, null);
         // if (oldRequestStr == "ALL") { // don't wait for a response from the sub mgr
@@ -912,7 +1478,7 @@ console.log(e);
     /**
      * The session was successfully connected, the next step is to add the 'rendez-vous' topic subscription
      */
-    this.handle_sessionConnected = function() {
+    this.handle_sessionConnected = function () {
       connected = true;
       //        onPolyChange();
       try {
@@ -926,21 +1492,17 @@ console.log(e);
           margin: 1,
           scale: 20,
           color: {
-            dark:"#000000",
-            light:"#ffffff",
+            dark: "#000000",
+            light: "#ffffff",
           },
         };
-        console.log('Generating QR for: ' + solconfig.webapp_url);
-        QRCode.toDataURL(solconfig.webapp_url, opts, function (err, url) {
-          document.getElementById("busapp-qr").innerHTML = '<img width="60" src="'+url+'"/>';
-        });
         console.log('Generating QR for: ' + solconfig.web_url + '/fence.html?'+fenceUid);
         QRCode.toDataURL(solconfig.web_url + '/fence?'+fenceUid, opts, function (err, url) {
           document.getElementById("fence-qr").innerHTML = '<img width="60" src="'+url+'"/>';
           document.getElementById("fence-target").href = solconfig.web_url +'/fence.html?'+fenceUid;
           console.log(document.getElementById("fence-target"));
         });
-    
+
       } catch (error) {
         console.log("Failed to add topic subscription. Disconnecting!");
         console.log(error.toString());
@@ -955,7 +1517,7 @@ console.log(e);
     /**
      * The subscription was successfully added, the next step is to send a 'I am logged in' message
      */
-    this.handle_subscriptionOperationSucceeded = function() {
+    this.handle_subscriptionOperationSucceeded = function () {
       console.log("subscription added");
     };
 
@@ -964,7 +1526,7 @@ console.log(e);
      * @param text
      * @param updateContent
      */
-    this.handle_failure = function(text, updateContent) {
+    this.handle_failure = function (text, updateContent) {
       console.log(text);
       connected = false;
       //        ns.cleanup();
@@ -973,7 +1535,7 @@ console.log(e);
     /**
      * General cleanup
      */
-    this.cleanup = function() {
+    this.cleanup = function () {
       if (mySession !== null) {
         mySession.dispose();
         mySession = null;
@@ -988,7 +1550,7 @@ console.log(e);
      * @param session
      * @param event
      */
-    sessionEventCb = function(session, event) {
+    sessionEventCb = function (session, event) {
       console.log(event.toString());
       if (event.sessionEventCode === solace.SessionEventCode.UP_NOTICE) {
         ns.handle_sessionConnected();
@@ -1014,9 +1576,12 @@ console.log(e);
      */
 
 
-    messageEventCb = function(session, message) {
+    messageEventCb = function (session, message) {
       try {
         var topic = message.getDestination().getName();
+
+        document.getElementById('topic').innerHTML = makeHtmlColors(topic);
+
         if (topic.indexOf("geo/") == 0) {
           parseGeoMessage(message);
         } else if (topic.indexOf("comms/") == 0) {
@@ -1036,7 +1601,7 @@ console.log(e);
 
     }
 
-    getTextPayload = function(message) {
+    getTextPayload = function (message) {
       if (message.getType() == solace.MessageType.TEXT) {
         return message.getSdtContainer().getValue();
       } else {
@@ -1044,27 +1609,27 @@ console.log(e);
       }
     }
 
-    parseCtrlMessage = function(message) {
+    parseCtrlMessage = function (message) {
       var levels = message.getDestination().getName().split("/"); // topic levels   geo/bus/1001/001.308820/0103.876270/007/OK  --> geo/bus/VehNum/lat/lon/Route/Status
       if (levels[1] == "bus") {
         var vehicle = vehicles[levels[2]];
         if (vehicle == null) {
-          alert("No vehicle "+levels[2]+" present.");
+          alert("No vehicle " + levels[2] + " present.");
           return;
         }
         var messageWindow = new google.maps.InfoWindow();
-	      messageWindow.setContent("<h3><b>Bus #"+levels[2]+"</b> has reported status: <b>"+levels[3]+"</b></h3>");
+        messageWindow.setContent("<h3><b>Bus #" + levels[2] + "</b> has reported status: <b>" + levels[3] + "</b></h3>");
         console.log(message.getBinaryAttachment());
 
-        messageWindow.open(map,vehicle["marker"]);
-        google.maps.event.addListener(messageWindow, 'closeclick', function() {
+        messageWindow.open(map, vehicle["marker"]);
+        google.maps.event.addListener(messageWindow, 'closeclick', function () {
           vehicle["marker"].setAnimation(google.maps.Animation.NONE);
         });
         vehicle["marker"].setIcon(icon_bus_med_msg);
         vehicle["marker"].setAnimation(google.maps.Animation.BOUNCE);
-        vehicle["marker"].setZIndex(globalZindex+100);  // pop to top
+        vehicle["marker"].setZIndex(globalZindex + 100);  // pop to top
       } else if (levels[1] == "route") {
-        for (var i=1000;i<10000;i++) { //var key in vehicles) {
+        for (var i = 1000; i < 10000; i++) { //var key in vehicles) {
           if (vehicles[i] != null && vehicles[i]["route"] == levels[2]) {
             vehicles[i]["marker"].setIcon(icon_bus_med_msg);
             vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
@@ -1073,7 +1638,7 @@ console.log(e);
       }
     }
 
-    parseCommsMessage = function(message) {
+    parseCommsMessage = function (message) {
       var levels = message.getDestination().getName().split("/"); // topic levels   geo/bus/1001/001.308820/0103.876270/007/OK  --> geo/bus/VehNum/lat/lon/Route/Status
       // comms/bus/1234
       // comms/route/012
@@ -1082,20 +1647,20 @@ console.log(e);
       if (levels[1] == "bus") {
         var vehicle = vehicles[levels[2]];
         if (vehicle == null) {
-          alert("No vehicle "+levels[2]+" present.");
+          alert("No vehicle " + levels[2] + " present.");
           return;
         }
         var messageWindow = new google.maps.InfoWindow();
-	      messageWindow.setContent('<h3><b>'+message.getBinaryAttachment()+'</b></h3>');
-        messageWindow.open(map,vehicle["marker"]);
-        google.maps.event.addListener(messageWindow, 'closeclick', function() {
+        messageWindow.setContent('<h3><b>' + message.getBinaryAttachment() + '</b></h3>');
+        messageWindow.open(map, vehicle["marker"]);
+        google.maps.event.addListener(messageWindow, 'closeclick', function () {
           vehicle["marker"].setAnimation(google.maps.Animation.NONE);
         });
         vehicle["marker"].setIcon(icon_bus_med_msg);
         vehicle["marker"].setAnimation(google.maps.Animation.BOUNCE);
-        vehicle["marker"].setZIndex(globalZindex+100);  // pop to top
+        vehicle["marker"].setZIndex(globalZindex + 100);  // pop to top
       } else if (levels[1] == "route") {
-        for (var i=1000;i<10000;i++) { //var key in vehicles) {
+        for (var i = 1000; i < 10000; i++) { //var key in vehicles) {
           if (vehicles[i] != null && vehicles[i]["route"] == levels[2]) {
             vehicles[i]["marker"].setIcon(icon_bus_med_msg);
             vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
@@ -1103,7 +1668,7 @@ console.log(e);
           }
         }
       } else if (levels[1] == "broadcast") {
-        for (var i=1000;i<10000;i++) { //var key in vehicles) {
+        for (var i = 1000; i < 10000; i++) { //var key in vehicles) {
           if (vehicles[i] != null) {
             vehicles[i]["marker"].setIcon(icon_bus_med_msg);
             vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
@@ -1116,17 +1681,17 @@ console.log(e);
       }
     }
 
-    function buildBusInfoWindowContent(vehNum,topic) {
+    function buildBusInfoWindowContent(vehNum, topic) {
       var contentString = '<div id="content">';
       if (vehNum >= 1000 && vehNum < 10000) {   // bus
         var bus = vehicles[vehNum];
-        contentString = '<h2 id="firstHeading" class="firstHeading">Route '+bus["route"]+'</h2>' +
-          '<div id="bodyContent"><p>' +
+        contentString = '<h2 id="firstHeading" class="firstHeading" style="color:#333;">Route ' + bus["route"] + '</h2>' +
+          '<div id="bodyContent"><p style="color:#333;">' +
           '<b>Bus Number:</b> ' + vehNum + '<br/>' +
           '<b>Current Position:</b> ' + bus["marker"].getPosition().lat().toFixed(4) + 'N,' + bus["marker"].getPosition().lng().toFixed(4) + 'E<br/>' +
           '<b>Status:</b> ' + bus["payload"].status + '<br/>' +
           '<b>Speed:</b> ' + bus["payload"].speed +
-	  '<br/><br/><b>Topic:</b><br/><code>' + topic + '</code>' +  // new for mark
+          '<p/><br/><p style="color:#333;"><b>Topic:</b><br/><span style="background-color: #333; color:#aaa;"<b><code>' + makeHtmlColors(topic) + '</code></b></span>' +  // new for mark
           // '<b>Destination:</b> ' + endAddr +
           '</p>';
         // if (img != null) {
@@ -1148,21 +1713,21 @@ console.log(e);
           marker.setIcon(icon_bus_small_ok);
         } else {  // must be a fault of some kind
           marker.setIcon(icon_bus_small_fault);
-          marker.setZIndex(globalZindex+100);
+          marker.setZIndex(globalZindex + 100);
         }
       } else {
         if (status == "STOPPED") {
           marker.setIcon(icon_bus_med_stop);
         } else if (status == "OK") {
-        marker.setIcon(icon_bus_med_ok);
+          marker.setIcon(icon_bus_med_ok);
         } else {  // must be a fault of some kind
           marker.setIcon(icon_bus_med_fault);
-          marker.setZIndex(globalZindex+100);
+          marker.setZIndex(globalZindex + 100);
         }
       }
     }
 
-    parseGeoMessage = function(message) {
+    parseGeoMessage = function (message) {
       // var payload = 0;
       // if (message.getXmlContent() != null) payload += message.getXmlContent().length;
       // if (message.getBinaryAttachment() != null) payload += message.getBinaryAttachment().length;
@@ -1185,18 +1750,19 @@ console.log(e);
         // vehicles[vehNum]["latOff"] = Math.random() / 20000;
         // vehicles[vehNum]["lonOff"] = Math.random() / 20000;
         vehicle["marker"] = new google.maps.Marker({
-        // vehicles[vehNum]["marker"] = new MarkerWithLabel({
+          // vehicles[vehNum]["marker"] = new MarkerWithLabel({
           zIndex: globalZindex++,
         });
         // if they click the icon, pop up a window
-        google.maps.event.addListener(vehicle["marker"], 'click', function() {
+        google.maps.event.addListener(vehicle["marker"], 'click', function () {
           vehicle["marker"].setZIndex(globalZindex++);  // pop to top
           vehicle["infoWindow"] = new google.maps.InfoWindow();
           // populate with something
           //vehicle["infoWindow"].setContent(buildBusInfoWindowContent(vehNum,message.getDestination().getName()));
           vehicle["infoWindow"].setContent(vehicle["infoWindowContent"]);
           vehicle["infoWindow"].open(map, vehicle["marker"]);
-          google.maps.event.addListener(vehicle["infoWindow"], 'closeclick', function() {
+          console.log(vehicle.infoWindowContent);
+          google.maps.event.addListener(vehicle["infoWindow"], 'closeclick', function () {
             vehicle["infoWindow"] = null;
           });
         });
@@ -1205,7 +1771,7 @@ console.log(e);
           newone = true;  // we'll do a special marker later on
           // console.log(">>> BUS ENTER: "+vehNum);
           var fenceMessage = solace.SolclientFactory.createMessage();
-          var topicName = "geo/fence/"+fenceUid+"/enter/"+vehNum+"/"+levels[5];  // geo/fence/abcd/enter/1037/003 (route num at end)
+          var topicName = "geo/fence/" + fenceUid + "/enter/" + vehNum + "/" + levels[5];  // geo/fence/abcd/enter/1037/003 (route num at end)
           fenceMessage.setDestination(solace.SolclientFactory.createTopic(topicName));
           var newPayload = JSON.parse(JSON.stringify(payload));
           newPayload['fenceStatus'] = "enter";
@@ -1213,9 +1779,9 @@ console.log(e);
           fenceMessage.setBinaryAttachment(JSON.stringify(newPayload));
           fenceMessage.setDeliveryMode(solace.MessageDeliveryModeType.DIRECT);
           try {
-              mySession.send(fenceMessage);
+            mySession.send(fenceMessage);
           } catch (e) {
-              console.error(e.toString());
+            console.error(e.toString());
           }
         }
 
@@ -1238,24 +1804,24 @@ console.log(e);
       } else if (vehType == "taxi") {
         vehicle["marker"].setIcon(icon_dot);
       }
-        // text = 51.502110,-0.092490|63 Darwin Street, London SE17 1EZ, UK|51.492200,-0.087780|63 Watling Street, London EC4M 9DD, UK|51.512870,-0.093050
-        // remember! When sending from Java app, Need to encode the strings in Java with UTF-8 and write as byte attachments, don't use just text message! (uses WIn encoding on windows)
-        // var levels2 = text.split("|");
-        // label = levels2[0];
-        // if (levels2.length > 1) {
-          // startAddr = levels2[1];
-          // startLat = levels2[2].split(",")[0];
-          // startLon = levels2[2].split(",")[1];
-          // endAddr = levels2[3];
-          // endLat = levels2[4].split(",")[0];
-          // endLon = levels2[4].split(",")[1];
+      // text = 51.502110,-0.092490|63 Darwin Street, London SE17 1EZ, UK|51.492200,-0.087780|63 Watling Street, London EC4M 9DD, UK|51.512870,-0.093050
+      // remember! When sending from Java app, Need to encode the strings in Java with UTF-8 and write as byte attachments, don't use just text message! (uses WIn encoding on windows)
+      // var levels2 = text.split("|");
+      // label = levels2[0];
+      // if (levels2.length > 1) {
+      // startAddr = levels2[1];
+      // startLat = levels2[2].split(",")[0];
+      // startLon = levels2[2].split(",")[1];
+      // endAddr = levels2[3];
+      // endLat = levels2[4].split(",")[0];
+      // endLon = levels2[4].split(",")[1];
 
       vehicle["marker"].setOpacity(1);
       if (vehicle["marker"].getMap() == null) {  // this is needed to prevent flickering, rather than just setting the map explicitly
         vehicle["marker"].setMap(map);
       }
       vehicle["ts"] = Date.now();
-      vehicle["infoWindowContent"] = buildBusInfoWindowContent(levels[2],message.getDestination().getName());
+      vehicle["infoWindowContent"] = buildBusInfoWindowContent(levels[2], message.getDestination().getName());
       if (vehicle["infoWindow"] != null) {
         // update it
         vehicle["infoWindow"].setContent(vehicle["infoWindowContent"]);
@@ -1263,22 +1829,22 @@ console.log(e);
     }  // end parseGeoMessage
 
 
-    replyReceivedCb = function(session, message) {
+    replyReceivedCb = function (session, message) {
       var text = message.getBinaryAttachment();
       //if (document.querySelector('#display').value == "Outline") {
-    //    updateSubsBoundary(text);
-    //  } else {
-        updateSubs(text);
-    //  }
+      //    updateSubsBoundary(text);
+      //  } else {
+      updateSubs(text);
+      //  }
     };
 
-    replyFailedCb = function(session, event) {
+    replyFailedCb = function (session, event) {
       //console.log(event.infoStr);
       //console.log(event.toString());
       setWorking(false);
     };
 
-    this.utils_updateContent = function(msg) {
+    this.utils_updateContent = function (msg) {
       console.log("content: '" + msg + "'");
     };
 
@@ -1294,7 +1860,7 @@ console.log(e);
       var maxp = 100;
       // The result should be between 4 and 2000
       var minv = Math.log(4);
-      var maxv = Math.log(2000);
+      var maxv = Math.log(800);
       // calculate adjustment factor
       var scale = (maxv - minv) / (maxp - minp);
       return Math.round(Math.exp(minv + scale * (position - minp)));
@@ -1316,25 +1882,11 @@ console.log(e);
   </script>
 </head>
 
-
 <body>
   <!--div id="aa"><h1>Aar<span class="orange_o">O</span>n's Geo Routing Demo <span class="small">v2.0&beta;</span></h1></div-->
 
   <div id="map-canvas"></div>
-<!--
-  <div id="over_map_config">
-    <h1>Connection Details: </h1>
-    <table>
-      <tr><td align="left">Solace URL: </td><td><input id="solurl" size="20" value="ws://mra06i3883igr.messaging.solace.cloud:80"/></td></tr>
-      <tr><td align="left">MessageVPN: </td><td><input id="solvpn" size="20" value="default"/></td></tr>
-      <tr><td align="left">Username: </td><td><input id="soluser" size="20" value="default"/></td></tr>
-      <tr><td align="left">Password: </td><td><input id="solpass" size="20" value="default" type="password"/></td></tr>
-      <tr><td></td><td align="left"><button id="connectToSolace" onclick="onLogin();">Connect</button></td></tr>
-    </table>
-  </div>
--->
-
-  <div id="over_map_tl">
+  <div id="over_map_filtering">
     <h1>Geo Filtering:</h1>
     <table>
       <!--tr>
@@ -1363,7 +1915,9 @@ console.log(e);
                 <button id="addRectButton" onclick="addNewRect(); updateSearch();">Add Rect</button>
               </td>
               <td align="right">
-                <button id="removeAllShapesButton" onclick="clearAllShapes(); document.getElementById('curSubs').innerHTML = '1'; document.getElementById('curAccuracy').innerHTML = '100';">Remove All Shapes</button>
+                <button id="removeAllShapesButton"
+                  onclick="clearAllShapes(); document.getElementById('curSubs').innerHTML = '1'; document.getElementById('curAccuracy').innerHTML = '100';">Remove
+                  All Shapes</button>
               </td>
             </tr>
           </table>
@@ -1398,11 +1952,12 @@ console.log(e);
             </tr-->
             <tr>
               <td>
-                <label for=fader class="newSliders">Max Subs:</label>
+                <label for=fader>Max Subs:</label>
               </td>
-              <td>
+              <td style="padding: 2px 0px">
                 <!--input type=range min=0 max=100 value=63 id=fader oninput="outputSubUpdate(value)" onchange="updateSearch()"-->
-                <input type=range min=0 max=100 value=69 id=fader oninput="outputSubUpdate(value)" onchange="updateSearch()">
+                <input class="slider" type=range min=0 max=100 value=69 id=fader oninput="outputSubUpdate(value)"
+                  onchange="updateSearch()">
                 <output for=fader id=subs class="newSliders">300</output>
                 <script>
                   function outputSubUpdate(val) {
@@ -1416,8 +1971,9 @@ console.log(e);
               <td>
                 <label for=fader2>Accuracy:</label>
               </td>
-              <td>
-                <input type=range min=0 max=100 value=71 id=fader2 oninput="outputAccuracyUpdate(value)" onchange="updateSearch()">
+              <td style="padding: 5px 0px">
+                <input type="range" class="slider" min=0 max=100 value=71 id=fader2 oninput="outputAccuracyUpdate(value)"
+                  onchange="updateSearch()">
                 <output for=fader2 id=accuracy class="newSliders">90</output><span class="newSliders">%</span>
                 <script>
                   function outputAccuracyUpdate(val) {
@@ -1433,43 +1989,62 @@ console.log(e);
       <tr>
         <td>
           <table>
-          <tr><td>Filter by <b>Vehicle</b> number:</td><td><input id="vehNum" onchange="updateSearch()" size="4"/></td></tr>
-          <tr><td>Filter by <b>Route</b> number:</td><td><input id="routeNum" onchange="updateSearch()" size="4"/></td></tr>
-	  <tr>
-            <td colspan="2">Filter by <b>Status:</b>&nbsp;&nbsp;
-            <select id="status" onchange="updateSearch()">
-            <option value="any">Any</option>
-            <option value="OK">In Motion</option>
-            <option value="STOPPED">At Bus Stop</option>
-            <option value="FAULT">Broken Down</option>
-          </select></td>
-      </tr>
+            <tr>
+              <td>Filter by <b>Vehicle</b> number:</td>
+              <td><input type="text" id="vehNum" onchange="updateSearch()" size="4" /></td>
+            </tr>
+            <tr>
+              <td>Filter by <b>Route</b> number:</td>
+              <td><input type="text" id="routeNum" onchange="updateSearch()" size="4" /></td>
+            </tr>
+            <tr>
+              <td colspan="2">Filter by <b>Status:</b>&nbsp;&nbsp;
+                <select id="status" class="decorated" onchange="updateSearch()">
+                  <option value="any">Any</option>
+                  <option value="OK">In Motion</option>
+                  <option value="STOPPED">At Bus Stop</option>
+                  <option value="FAULT">Broken Down</option>
+                </select>
+              </td>
+            </tr>
           </table>
         </td>
       </tr>
       <tr>
         <td>
-          <button id="heatButton" onclick="heatmap.setMap(heatmap.getMap() ? null : map); if (heatmap.getMap() && zoomLevel < 13) map.setZoom(13);">Toggle Heatmap</button>
+          <button id="heatButton"
+            onclick="heatmap.setMap(heatmap.getMap() ? null : map); if (heatmap.getMap() && zoomLevel < 13) map.setZoom(13);">Toggle
+            Heatmap</button>
         </td>
       </tr>
     </table>
 
   </div>
   <div id="over_map_tr">
-    <table><tr>
-      <td valign="top"><h1>Real-time Connected Buses Demo</h1><p/><h3>Bidirectional IoT Communication using MQTT<br>Advanced Filtering and Routing Capabilities</h3>
-      </td></tr>
-    </table>
-  </div>
-
-
-</div>
-  <div id="over_map_tr_qr">
     <table>
-      <!-- <tr><td style="text-align:right"><img width="75" padding="0" margin="10" src="qr-busapp.png"/></td><td><h2>Bus<br/>Driver<br/>App</h2></td></tr> -->
-      <tr><td style="text-align:right"><span id='busapp-qr' name='busapp-qr'>BUSAPP QR HERE</span></td><td><h2>Bus<br/>Driver<br/>App</h2></td></tr>
+      <tr>
+        <td valign="top">
+          <img src="solace-logo.png"/>
+          <h1>Real-time Connected Buses Demo</h1>
+          <p />
+          <h3>Bidirectional IoT Communication using MQTT<br>Advanced Filtering and Routing Capabilities</h3>
+        </td>
+      </tr>
     </table>
   </div>
+
+
+  </div>
+  <!-- <div id="over_map_busapp_qr">
+    <table>
+      <tr>
+        <td style="text-align:right"><img width="75" padding="0" margin="10" src="qr-busapp.png" /></td>
+        <td style="padding-left:10px; padding-bottom:5px;">
+          <h2>Bus<br />Driver<br />App</h2>
+        </td>
+      </tr>
+    </table>
+  </div> -->
 
   <div id="over_map_bl">
     <!--h3>
@@ -1477,20 +2052,88 @@ console.log(e);
       # of Subscriptions: <span id='curSubs'>1</span><br/>
       Coverage Accuracy: <span id='curAccuracy'>100</span>%
     </h3-->
-    <table><tr><td><h3>Recv'd Message Rate:</h3></td><td><h3><b><span id='rate' name='rate'>0</span> msg/s</b></h3></td></tr>
-      <tr><td><h3># of Subscriptions:</h3></td><td><h3><span id='curSubs'>1</span></h3></td></tr>
-      <tr><td><h3>Coverage Accuracy:</h3></td><td><h3><span id='curAccuracy'>100</span>%</h3></td></tr>
-      <tr><td><h3>Tracked Buses:</h3></td><td><h3><span id='totalBuses'>0</span></h3></td></tr>
+    <table>
+      <tr>
+        <td>
+          <h3>Recv'd Message Rate:</h3>
+        </td>
+        <td>
+          <h3><b><span id='rate' name='rate'>0</span> msg/s</b></h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3># of Subscriptions:</h3>
+        </td>
+        <td>
+          <h3><span id='curSubs'>1</span></h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Coverage Accuracy:</h3>
+        </td>
+        <td>
+          <h3><span id='curAccuracy'>100</span>%</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Tracked Buses:</h3>
+        </td>
+        <td>
+          <h3><span id='totalBuses'>0</span></h3>
+        </td>
+      </tr>
     </table>
   </div>
 
-  <div id="over_map_br">
-    <table><tr><td rowspan="1" style="padding-right: 5px;" ><span id='fence-qr' name='fence-qr'>QR HERE</span></td>
-      <td><h2>GeoFence<br/>Notifications</h2><a id='fence-target' href="blank" target="_blank">Open in new Tab</a></td></tr>
-   
+  <div id="over_map_fence">
+    <table>
+      <tr>
+        <td rowspan="1" style="padding-right: 5px;"><span id='fence-qr' name='fence-qr'>QR HERE</span></td>
+        <td>
+          <h2>GeoFence<br />Notifications</h2><a id='fence-target' href="blank" target="_blank">Open in new Tab</a>
+        </td>
+      </tr>
     </table>
   </div>
-<script> document.getElementById("over_map_br").style.display = "none";  </script> 
+
+  <div id="real-time-topics">
+    <table>
+      <tr>
+        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa;'>
+        <!--         const levelColors = [ '#fff', '#5f5', '#f5f', '#0ff', '#ff0', '#58f', '#f85' ]; -->
+        <span style="color:#fff">geo</span
+          >/<span style="color:#5f5;">bus</span
+          >/<span style="color:#f5f;">{busNum}</span
+          >/<span style="color:#0ff;">{lat}</span
+          >/<span style="color:#ff0;">{lon}</span
+          >/<span style="color:#58f;">{routeNum}</span
+          >/<span style="color:#f55;">{status}</span>
+        </td>
+      </tr>
+      <tr>
+        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa;'>
+          <span id="topic">&nbsp;</span>
+        </td>
+      </tr>
+      <tr>
+        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa;'>
+          <!--span id="sub"><span style="color:#fff">geo</span>/<span style="color:#5f5;">bus</span>/<span style="color: #fff;">&gt;</span></span-->
+          <span id="sub">&nbsp;</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="topicMO" style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa;'>
+    <p>abc/abc/123/456</p>
+  </div>
+  <script>
+   document.getElementById("over_map_fence").style.display = "none";
+   document.getElementById("topicMO").style.display = "none";
+   </script>
 </body>
 
 </html>
