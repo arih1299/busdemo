@@ -5,28 +5,28 @@
   <title>Solace Real-time Connected Buses Demo</title>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
-  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="favicon.ico" />
   <style>
     html,
     body {
       height: 100%;
       margin: 0px;
-      padding: 0px
+      padding: 0px;
+      overflow: hidden; /* Hide scrollbars */
     }
 
     #map-canvas {
       height: 100%;
       margin: 0px;
-      padding: 0px
+      padding: 0px;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-  <!--script type="text/javascript" src="marker_with_label.js"></script-->
-  <!-- <script type="text/javascript" src="qrcode.min.js"></script> -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAW6283JLNz9MMC2d0-34O7ipdqpGDWWeg&v=3.exp&libraries=visualization"></script>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9JGEC8ucg3DFD2gSdyqDIptMLkkHKfqM&v=3.exp&libraries=visualization"></script> -->
   <script type="text/javascript" src="solclient-full.js"></script>
   <script type="text/javascript" src="resources/config.js"></script>
+  <!-- <script type="text/javascript" src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script> -->
+  <!--script type="text/javascript" src="marker_with_label.js"></script-->
   <style>
     #wrapper {
       position: relative;
@@ -34,14 +34,15 @@
 
     #topicMO {
       position:absolute;
+      z-index: 10000000;
       /* background-color: rgba(255, 255, 255, 0.9);
       border: 1px solid #999;
       font-family: 'sans-serif'; */
-      background-color: rgba(51, 51, 51, 0.9);
-      /* border: 1px solid #00c895; */
-      border: 1px solid #FF7F27;
+      background-color: rgba(51, 51, 51, 0.8);
+      border: 1px solid #00c895;
+      /* border: 1px solid #FF7F27; */
       font-family: 'sans-serif';
-      padding: 4px 10px 5px 10px;
+      padding: 7px 10px 5px 10px;
       /* line-height: 30px;
       padding-left: 10px; */
       top: 10px;
@@ -52,23 +53,27 @@
       position: fixed;
       bottom: 10px;
       left: 50%;
-      margin-left: -300px; /* approx */
-      background-color: rgba(51, 51, 51, 0.9);
+      z-index: 101;
+      margin-left: -400px; /* approx */
+      background-color: rgba(51, 51, 51, 0.8);
       /* border: 1px solid #00c895; */
       border: 1px solid #00c895;
       /* border: 1px solid #FF7F27; */
-      padding: 2px 8px 3px 8px;
+      /* padding: 2px 8px 3px 8px; */
+      padding: 10px;
       /* margin: auto; */
       /* margin-left: auto;
       margin-right: auto; */
+      line-height: 30px;
     }
 
     #over_map_filtering {
       position: absolute;
       top: 10px;
       left: 10px;
+      /* left: 100px; */
       z-index: 99;
-      background-color: rgba(61, 61, 61, 0.9);
+      background-color: rgba(61, 61, 61, 0.8);
       padding: 10px;
       border: 1px solid #00c895;
       font-family: 'sans-serif';
@@ -81,7 +86,7 @@
       top: 10px;
       right: 10px;
       z-index: 98;
-      background-color: rgba(61, 61, 61, 0.9);
+      background-color: rgba(61, 61, 61, 0.8);
       padding: 10px;
       border: 1px solid #00c895;
       font-family: 'sans-serif';
@@ -93,8 +98,8 @@
       position: absolute;
       bottom: 24px;
       right: 60px;
-      z-index: 99;
-      background-color: rgba(61, 61, 61, 0.9);
+      z-index: 97;
+      background-color: rgba(61, 61, 61, 0.8);
       padding: 10px;
       border: 1px solid #00c895;
       /* border: 1px solid #FF7F27; */
@@ -105,23 +110,22 @@
 
     #over_map_bl {
       position: absolute;
-      bottom: 35px;
+      bottom: 32px;
       left: 10px;
-      z-index: 99;
-      background-color: rgba(61, 61, 61, 0.9);
+      z-index: 98;
+      background-color: rgba(61, 61, 61, 0.8);
       padding: 10px;
       border: 1px solid #00c895;
       font-family: 'sans-serif';
       line-height: 30px;
-      padding-left: 10px;
     }
 
     #over_map_fence {
       position: absolute;
       bottom: 24px;
       right: 235px;
-      z-index: 99;
-      background-color: rgba(61, 61, 61, 0.9);
+      z-index: 95;
+      background-color: rgba(61, 61, 61, 0.8);
       padding: 10px;
       border: 1px solid #00c895;
       /* border: 1px solid #FF7F27; */
@@ -157,54 +161,21 @@
     p, td, a {
       font: 9pt Roboto, sans-serif;
       color: #ffffff;
-      padding: 0px;
+      /* padding: 0px; */
+      padding: 1px 0px;
       margin-top: 1px;
       margin-bottom: 1px;
     }
 
-    a:hover {
-      color: #f4961c;
-    }
+/*    a:hover {
+       color: #f4961c;
+    }*/
 
-    .orange_o {
+/*    .orange_o {
       color: #f4961c;
       font: 17pt century gothic;
     }
-
-    .labels {
-      color: blue;
-      background-color: white;
-      font-family: "Verdana", "Arial", sans-serif;
-      font-size: 10px;
-      text-align: center;
-      width: 100px;
-      border: 1px solid blue;
-    }
-
-    .labels3 {
-      background-color: rgba(255, 255, 255, 0.7);
-      font-family: "Arial", sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      text-align: center;
-      width: 120px;
-      border: 1px solid black;
-    }
-
-    .labels2 {
-      color: rgba(0, 0, 100, 1);
-      background-color: rgba(255, 255, 255, 0.7);
-      font-family: "Arial", sans-serif;
-      font-size: 10px;
-      font-weight: bold;
-      text-align: left;
-      width: 80px;
-      border: 1px solid rgba(0, 0, 100, 1);
-      padding-left: 1px;
-    }
-
-
-/* 
+ 
     .sliders {
       font: 16pt Haettenschweiler, Impact, fantasy;
       color: #003b74;
@@ -227,7 +198,7 @@
     button {
       color: #fff;
       border: 2px solid #00c895;
-      border-radius: 10px;
+      border-radius: 12px;
       background-color: rgba(61, 61, 61, 0.9);
     }
 
@@ -323,14 +294,24 @@
     var icon_bus_med_msg = { url: "green_med_msg.png", anchor: { x: 8, y: 8 } };
     var icon_bus_med_fault = { url: "green_med_fault.png", anchor: { x: 8, y: 8 } };
 
+    var icon_bus_white_arrow = { url: "gfx/marker-green-white-arrow.png", anchor: { x: 16, y: 16 } };
+
+    var icon_buses = [];
+    var icon_markers = [];
+    for (var i=0;i<36;i++) {
+      icon_buses.push({ url: "gfx/" + i.toString().padStart(4,'0') + ".png"});
+      icon_markers.push({ url: "gfx/marker2_" + i.toString().padStart(4,'0') + ".png"});
+    }
+
 
     // const subsColor = '#4488ff';
     // const shapeColor = '#4488ff';
-    // const subsColor = '#ff8800';
-    // const shapeColor = '#ff8800';
-    const subsColor = '#FF7F27';
-    const shapeColor = '#FF7F27';
-    const levelColors = [ '#fff', '#5f5', '#f5f', '#0ff', '#ff0', '#58f', '#f55' ];
+    const subsColor = '#f71';
+    const shapeColor = '#f71';
+    // const subsColor = '#FF7F27';
+    // const shapeColor = '#FF7F27';
+    // const levelColors = [ '#aaa', '#5f5', '#f5f', '#0ff', '#ff0', '#58f', '#f55', '#fff', '#fa0', '#888' ];
+    const levelColors = [ '#aaa', '#5f5', '#58f', '#ff0', '#f5f', '#f71', '#f71', '#0ff', '#fff', '#888' ];
     /*
             <span style="color:#fff">geo</span
           >/<span style="color:#5f5;">bus</span
@@ -356,14 +337,14 @@
 
     function initialize() {
       var mapOptions = {
-        center: new google.maps.LatLng(1.3, 103.85), // Singapore
+        center: new google.maps.LatLng(1.34, 103.85), // Singapore
         zoom: 13, // demo
         draggable: true,
         // mapTypeId: 'satellite',
-        mapTypeControlOptions: {
-          // mapTypeIds: ['coordinate', 'roadmap'],
+        // mapTypeControlOptions: {
+          // mapTypeIds: ['coordinate', 'roadmap', 'terrain', 'satellite'],
           // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-        },
+        // },
         mapTypeControl: false,
         fullscreenControl: false,
         streetViewControl: false,
@@ -376,11 +357,12 @@
         styles: [
           {
             featureType: "all",
-            "elementType": "all",
-            "stylers": [
-              {
-                "visibility": "on"
-              }
+            elementType: "all",
+            stylers: [
+              {visibility: "on"},
+              {lightness: 50},
+              {gamma : 6},
+              {invert_lightness: true}
             ]
           },
           {
@@ -444,9 +426,9 @@
               {
                 "color": "#000000"
               },
-              {
-                "lightness": 20
-              }
+              // {
+              //   "lightness": 20
+              // }
             ]
           },
           {
@@ -454,13 +436,13 @@
             "elementType": "geometry.stroke",
             "stylers": [
               {
-                "color": "#000000"
+                "color": "#0000ff"
               },
+              // {
+              //   "lightness": 17
+              // },
               {
-                "lightness": 17
-              },
-              {
-                "weight": 1.2
+                "weight": 0.5
               }
             ]
           },
@@ -472,7 +454,7 @@
                 "color": "#000000"
               },
               {
-                "lightness": 20
+                "lightness": 100
               }
             ]
           },
@@ -492,7 +474,7 @@
             "stylers": [
               {
                 // "color": "#4d6059"
-                "color": "#ff0000"
+                "color": "#000000"
               }
             ]
           },
@@ -512,7 +494,7 @@
             "stylers": [
               {
                 // "lightness": 21
-                "lightness": 51
+                "lightness": 100
               }
             ]
           },
@@ -532,7 +514,7 @@
             "stylers": [
               {
                 // "color": "#4d6059"
-                "color": "#333333"
+                "color": "#000000"
               }
             ]
           },
@@ -565,8 +547,11 @@
             "stylers": [
               {
                 // "color": "#7f8d89"
-                "color": "#666666"
-              }
+                "color": "#6a6666"
+              },
+              // {
+              //   "visibility": "off"
+              // }
               // ,
               // {
               //   "lightness": 17
@@ -577,35 +562,34 @@
             "featureType": "road.highway",
             "elementType": "geometry.stroke",
             "stylers": [
-              {
-                // "color": "#7f8d89"
-                "color": "#666666"
-              },
+              // {
+              //   // "color": "#7f8d89"
+              //   color: "#776666"
+              // },
               {
                 "visibility": "off"
               }
-
             ]
           },
-          {
-            "featureType": "road.arterial",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#000000"
-              },
-              {
-                "lightness": 18
-              }
-            ]
-          },
+          // {
+          //   "featureType": "road.arterial",
+          //   "elementType": "geometry",
+          //   "stylers": [
+          //     {
+          //       "color": "#0000ff"
+          //     },
+          //     // {
+          //     //   "lightness": 18
+          //     // }
+          //   ]
+          // },
           {
             "featureType": "road.arterial",
             "elementType": "geometry.fill",
             "stylers": [
               {
                 // "color": "#7f8d89"
-                "color": "#555555"
+                "color": "#555559"
               }
             ]
           },
@@ -613,26 +597,25 @@
             "featureType": "road.arterial",
             "elementType": "geometry.stroke",
             "stylers": [
-              {
-                // "color": "#7f8d89"
-                "color": "#666666"
-              },
+              // {
+              //   // "color": "#7f8d89"
+              //   "color": "#557777"
+              // },
               {
                 "visibility": "off"
               }
-
             ]
           },
           {
             "featureType": "road.local",
             "elementType": "geometry",
             "stylers": [
-              {
-                "color": "#000000"
-              },
-              {
-                "lightness": 16
-              }
+              // {
+              //   "color": "#000000"
+              // },
+              // {
+              //   "lightness": 16
+              // }
             ]
           },
           {
@@ -641,7 +624,7 @@
             "stylers": [
               {
                 // "color": "#7f8d89"
-                "color": "#444444"
+                color: "#444844"
               }
             ]
           },
@@ -649,26 +632,26 @@
             "featureType": "road.local",
             "elementType": "geometry.stroke",
             "stylers": [
-              {
+          //     {
                 // "color": "#7f8d89"
-                "color": "#6666ff"
-              },
+              //   "color": "#446644"
+              // },
               {
                 "visibility": "off"
               }
-
             ]
           },
           {
             "featureType": "transit",
             "elementType": "geometry",
+            // airports and stuff
             "stylers": [
               {
-                "color": "#000000"
+                "color": "#444444"
               },
-              {
-                "lightness": 19
-              }
+              // {
+              //   "lightness": 19
+              // }
             ]
           },
           {
@@ -766,10 +749,17 @@
 
 
       };
+      // console.log(JSON.stringify(mapOptions.styles));
       // directionsDisplay = new google.maps.DirectionsRenderer();
+
+
+      // mapOptions.heading = 70;
       map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
       //map.mapTypes.set('map_style', styledMap);
-      map.setMapTypeId('terrain');
+      // map.setMapTypeId('terrain');
+      // map.setMapTypeId('hybrid');
+      // map.setMapTypeId('satellite');
+      // map.setOptions(mapOptions);
 
       //map.setMapTypeId('map_style');
       // directionsDisplay.setMap(map);
@@ -840,7 +830,7 @@
       google.maps.event.addListener(map, 'zoom_changed', function () {
         console.log("Zoom changed!!  from " + zoomLevel + " to " + map.getZoom());
         if (heatmap.getMap() && map.getZoom() < 13) heatmap.setMap(null);
-        if (zoomLevel >= 13 && map.getZoom() <= 12 ||
+/*        if (zoomLevel >= 13 && map.getZoom() <= 12 ||
           zoomLevel <= 12 && map.getZoom() >= 13) { // crossing a threshold
           for (key in vehicles) {
             var vehicle = vehicles[key];
@@ -849,14 +839,21 @@
             }
           }
           console.log("done!");
-        }
+        }*/
         zoomLevel = map.getZoom();
+        if (zoomLevel < 17) map.setMapTypeId('roadmap');
+        else map.setMapTypeId('satellite');
+
+        for (key in vehicles) {
+          if (!vehicles.hasOwnProperty(key)) continue;
+          setBusIcon(key);
+        }
       });
 
       // this kicks off the heatmap to auto-refresh every 5 seconds
       heatmap = new google.maps.visualization.HeatmapLayer({
         // radius: 0.005,
-        radius: 0.003,
+        radius: 0.004,
         dissipating: false,
       });
       setInterval(function () {
@@ -886,15 +883,7 @@
       return new google.maps.LatLng(point.lat() + (Math.cos(angle) * dist), point.lng() + (Math.sin(angle) * dist));
     }
 
-    function addNewPoly() {
-      var p1 = getRandomPoint();
-      var p2 = getPointNearPoint(p1);
-      var latDist = p1.lat() - p2.lat();
-      var lngDist = p1.lng() - p2.lng();
-      var mid = new google.maps.LatLng((p1.lat() + p2.lat()) / 2, (p1.lng() + p2.lng()) / 2);
-      var p3 = new google.maps.LatLng(((p1.lat() + p2.lat()) / 2) + lngDist, ((p1.lng() + p2.lng()) / 2) - latDist);
-      var coords = [p1, p3, p2];
-      if (Math.random() < 0.5) coords.push(new google.maps.LatLng(((p1.lat() + p2.lat()) / 2) - lngDist, ((p1.lng() + p2.lng()) / 2) + latDist));  // triangle -> parallogram
+    function addNewPolyCoords(coords) {
       var poly = new google.maps.Polygon({
         map: map,
         paths: coords,
@@ -902,7 +891,7 @@
         strokeOpacity: 0.7,
         strokeWeight: 3,
         fillColor: shapeColor,
-        fillOpacity: 0.025,
+        fillOpacity: 0,//0.025,
         visible: true,
         draggable: true,
         clickable: true,
@@ -919,7 +908,19 @@
       google.maps.event.addListener(poly, 'dragend', endDrag);
     }
 
-    function startDrag() { console.log("DRAGGGIN!!!!"); dragging = true; }
+    function addNewPoly() {
+      var p1 = getRandomPoint();
+      var p2 = getPointNearPoint(p1);
+      var latDist = p1.lat() - p2.lat();
+      var lngDist = p1.lng() - p2.lng();
+      var mid = new google.maps.LatLng((p1.lat() + p2.lat()) / 2, (p1.lng() + p2.lng()) / 2);
+      var p3 = new google.maps.LatLng(((p1.lat() + p2.lat()) / 2) + lngDist, ((p1.lng() + p2.lng()) / 2) - latDist);
+      var coords = [p1, p3, p2];
+      if (Math.random() < 0.5) coords.push(new google.maps.LatLng(((p1.lat() + p2.lat()) / 2) - lngDist, ((p1.lng() + p2.lng()) / 2) + latDist));  // triangle -> parallogram
+      addNewPolyCoords(coords);
+    }
+
+    function startDrag() { console.log("DRAGGGIN!!!!"); dragging = true; document.getElementById("topicMO").style.display = "none"; }
     function endDrag() { console.log("NO MORE DRAGGGIN!!!!"); dragging = false; updateSearch(); }
 
 
@@ -1051,6 +1052,7 @@
 
     // called when something changes (shape boundary, slider value) to kick off a search
     function updateSearch() {
+      document.getElementById("topicMO").style.display = "none";
       if (dragging) return;
       onPolyChange();
     }
@@ -1114,6 +1116,17 @@
       return circleObj;
     }
 
+    function makeSub(innerCoordStr, outerCoordStr, prePad) {
+      var m = innerCoordStr.match(/^(-?)(\d+)\.?(\d*)$/);  // grab the sign, the left of decimal, and the right of decimal
+      var m2 = outerCoordStr.match(/^(-?)(\d+)\.?(\d*)$/);
+      var coordSub = m[1] ? "-" : "0";
+      coordSub += m[2].padStart(prePad, "0");
+      coordSub += ".";  // even in teh new version this doesn't hold true
+      if (m[3]) coordSub += m[3];
+      coordSub.padEnd(m2[3].length - m[3].length, "0");
+      return coordSub;
+    }
+
     function updateSubs(newSubCoords) {
       //subCoordsText = newSubCoords;
       var coords = newSubCoords.split("|");
@@ -1128,23 +1141,28 @@
         subs2[i].setBounds(new google.maps.LatLngBounds(
           new google.maps.LatLng(innerLat, innerLon),
           new google.maps.LatLng(outerLat, outerLon)));
+          
 
         // new stuff for topic sub mouseover display
-        var m = innerLat.match(/^(-?)(\d+)\.?(\d*)$/);
-        var m2 = outerLat.match(/^(-?)(\d+)\.?(\d*)$/);
-        var topicLat = m[1] ? "-" : "0";
-        topicLat += m[2].padStart(2, "0");
-        topicLat += ".";  // even in teh new version this doesn't hold true
-        if (m[3]) topicLat += m[3];
-        topicLat.padEnd(m2[3].length - m[3].length, "0");
-        var topicLon = innerLon;//.toFixed(5);
-        m = innerLon.match(/^(-?)(\d+)\.?(\d*)$/);
-        m2 = outerLon.match(/^(-?)(\d+)\.?(\d*)$/);
-        var topicLon = m[1] ? "-" : "0";
-        topicLon += m[2].padStart(3, "0");
-        topicLon += ".";  // even in teh new version this doesn't hold true
-        if (m[3]) topicLon += m[3];
-        topicLon.padEnd(m2[3].length - m[3].length, "0");
+        // var m = innerLat.match(/^(-?)(\d+)\.?(\d*)$/);  // grab the sign, the left of decimal, and the right of decimal
+        // var m2 = outerLat.match(/^(-?)(\d+)\.?(\d*)$/);
+        // var topicLat = m[1] ? "-" : "0";
+        // topicLat += m[2].padStart(2, "0");
+        // topicLat += ".";  // even in teh new version this doesn't hold true
+        // if (m[3]) topicLat += m[3];
+        // topicLat.padEnd(m2[3].length - m[3].length, "0");
+        var topicLat = makeSub(innerLat,outerLat,2);
+
+        // var topicLon = innerLon;//.toFixed(5);
+        // m = innerLon.match(/^(-?)(\d+)\.?(\d*)$/);
+        // m2 = outerLon.match(/^(-?)(\d+)\.?(\d*)$/);
+        // var topicLon = m[1] ? "-" : "0";
+        // topicLon += m[2].padStart(3, "0");
+        // topicLon += ".";  // even in teh new version this doesn't hold true
+        // if (m[3]) topicLon += m[3];
+        // topicLon.padEnd(m2[3].length - m[3].length, "0");
+        var topicLon = makeSub(innerLon,outerLon,3);
+
         subs2[i]['_data_'] = oldRequestObj.topicPrefix + topicLat + "*/" + topicLon + "*/" + oldRequestObj.topicSuffix;// + "  (" + innerLat + "," + outerLat + "; " + (outerLat - innerLat);
 
         subs2[i].addListener("mouseover", function (event) {
@@ -1186,11 +1204,17 @@
       try {
         var match = lastResults.match("Num Subs = (\\d+), Coverage Ratio = ([0-9.]+)%");
         if (match[1] == 1) {
-          document.getElementById('curSubs').innerHTML = match[1];
-        } else {
-          document.getElementById('curSubs').innerHTML = "<span style=\"color:#FF7F27;\">" + match[1] + "</span>";
+          console.log(numNewCoords);
+          console.log(coords[1]);
+          var c2 = coords[1].split(";");
+          var c2i = c2[0].split(",");
+          var c2o = c2[1].split(",");
+          // console(c2);
+          document.getElementById("sub").innerHTML = makeHtmlColors(oldRequestObj.topicPrefix + makeSub(c2i[0],c2o[0],2) + "*/" + makeSub(c2i[1],c2o[1],3) + "*/" + oldRequestObj.topicSuffix);
         }
-        document.getElementById('curAccuracy').innerHTML = match[2];
+        // if we're getting a response, that means that it can't be blank
+        document.getElementById('curSubs').innerHTML = "<span style=\"color:#f71;\">" + match[1] + "</span>";
+        document.getElementById('curAccuracy').innerHTML = match[2] + "%";
       } catch (e) {
         console.log(e);
       }
@@ -1277,7 +1301,6 @@
       return msg;
     };
 
-    var aa_name;
 
     /**
      * Invoked when the Ok button is clicked on the login dialog. This method will trigger the creation and connect()
@@ -1299,6 +1322,7 @@
         mySessionProperties.vpnName = solconfig.vpn;
         mySessionProperties.userName = solconfig.user;
         mySessionProperties.password = solconfig.pass;
+
 
         mySessionProperties.includeSenderId = true;
         //            myNickName = mySessionProperties.clientName = ns.utils_getNickName();
@@ -1366,7 +1390,13 @@
       lastMsgCount = 0;
       discardCount = 0;
       //setTimeout(function(){ alert("Click 'Remove all shapes' to start the bus demo."); },3000);
-      setTimeout(clearAllShapes, 3000);
+
+      // setTimeout(clearAllShapes, 3000);
+      setTimeout(function() {
+        addNewPolyCoords([new google.maps.LatLng(1.301,103.801),new google.maps.LatLng(1.399,103.801),new google.maps.LatLng(1.399,103.899),new google.maps.LatLng(1.301,103.899)]);
+        updateSearch();
+      }, 3000);
+
       setInterval(function () {
         if (!connected) return;
         var curMsgs = mySession.getStat(solace.StatType.RX_TOTAL_DATA_MSGS);
@@ -1381,7 +1411,7 @@
       }, 1000);  // once a second
     };
 
-    this.getGeoSearchParams = function () {
+    function getGeoSearchParams() {
       var params = {};
       params["accuracy"] = accuracy;
       params["numSubs"] = numSubs;
@@ -1389,23 +1419,31 @@
       var vehNum = document.querySelector('#vehNum').value;
       var routeNum = document.querySelector('#routeNum').value;
       var statusFilter = document.querySelector('#status').value;
-      var prefix = "geo/";
+      var prefix = "bus_trak/gps/v2/";
       var suffix = "";
-      // if (show == "taxi") prefix += "taxi/";
-      // else if (show == "buses") prefix += "bus/";
-      // else prefix += "*/";
-      prefix += "bus/";
-      if (vehNum == "") prefix += "*/";
-      else prefix += vehNum + "/";
-      params["topicPrefix"] = prefix;
-      if (routeNum == "") suffix += "*/";
+      // route num
+      if (routeNum == "") prefix += "*/";
+      else if (routeNum.endsWith("*")) prefix += routeNum + "/";
       else {
-        if (routeNum < 100) suffix += "0";
-        if (routeNum < 10) suffix += "0";
-        suffix += routeNum + "/";
+        var numericPart = routeNum.replace(/\D/g,'');
+        var alphaPart = routeNum.replace(/[^a-zA-Z]/g,'').toUpperCase();
+        console.log(numericPart);
+        console.log(alphaPart);
+        // if (numericPart < 100) prefix += "0";
+        // if (numericPart < 10) prefix += "0";
+
+        prefix += numericPart.padStart(3,'0') + alphaPart + "*/";
       }
+      // bus num
+      if (vehNum == "") prefix += "*/";
+      else prefix += vehNum.padStart(5,'0') + "/";
+
+      // direction NE=0, NW=3
+      suffix += document.querySelector('#heading').value + "/";  // b/c we now have direction
       if (statusFilter == "any") suffix += ">";
       else suffix += statusFilter;
+
+      params["topicPrefix"] = prefix;
       params["topicSuffix"] = suffix;
       console.log(prefix + "  -  " + suffix);
       return params;
@@ -1434,8 +1472,8 @@
           setWorking(false);
           return;
         }
-        if (totalSearchShapes > 0) document.getElementById("over_map_fence").style.display = "block";
-        else document.getElementById("over_map_fence").style.display = "none";
+        // if (totalSearchShapes > 0) document.getElementById("over_map_fence").style.display = "block";
+        // else document.getElementById("over_map_fence").style.display = "none";
         for (var i = 0; i < 2; i++) {
           boundary[i].setMap(null);
         }
@@ -1483,8 +1521,8 @@
       //        onPolyChange();
       try {
         //mySession.subscribe(solace.SolclientFactory.createTopic("geo/*/*/>"), false, this, OPERATION_TIMEOUT);
-        mySession.subscribe(solace.SolclientFactory.createTopic("comms/>"), false, this, OPERATION_TIMEOUT);
-        mySession.subscribe(solace.SolclientFactory.createTopic("ctrl/>"), true, this, OPERATION_TIMEOUT);
+        mySession.subscribe(solace.SolclientFactory.createTopic("bus/comms/>"), false, this, OPERATION_TIMEOUT);
+        mySession.subscribe(solace.SolclientFactory.createTopic("bus/ctrl/>"), true, this, OPERATION_TIMEOUT);
         // add my QR code for fence
         var opts = {
           errorCorrectionLevel: 'L',
@@ -1496,12 +1534,12 @@
             light: "#ffffff",
           },
         };
-        console.log('Generating QR for: ' + solconfig.web_url + '/fence.html?'+fenceUid);
-        QRCode.toDataURL(solconfig.web_url + '/fence?'+fenceUid, opts, function (err, url) {
-          document.getElementById("fence-qr").innerHTML = '<img width="60" src="'+url+'"/>';
-          document.getElementById("fence-target").href = solconfig.web_url +'/fence.html?'+fenceUid;
-          console.log(document.getElementById("fence-target"));
-        });
+        // console.log('Generating QR for: ' + solconfig.web_url + '/fence.html?'+fenceUid);
+        // QRCode.toDataURL(solconfig.web_url + '/fence?'+fenceUid, opts, function (err, url) {
+        //   document.getElementById("fence-qr").innerHTML = '<img width="60" src="'+url+'"/>';
+        //   document.getElementById("fence-target").href = solconfig.web_url +'/fence.html?'+fenceUid;
+          // console.log(document.getElementById("fence-target"));
+        // });
 
       } catch (error) {
         console.log("Failed to add topic subscription. Disconnecting!");
@@ -1582,12 +1620,12 @@
 
         document.getElementById('topic').innerHTML = makeHtmlColors(topic);
 
-        if (topic.indexOf("geo/") == 0) {
+        if (topic.indexOf("bus_trak/gps/") == 0) {
           parseGeoMessage(message);
-        } else if (topic.indexOf("comms/") == 0) {
+        } else if (topic.indexOf("bus_trak/comms/") == 0) {
           parseCommsMessage(message);
           // do something
-        } else if (topic.indexOf("ctrl/") == 0) {
+        } else if (topic.indexOf("bus_trak/ctrl/") == 0) {
           // could be heatmap!
           parseCtrlMessage(message);
         } else {
@@ -1610,15 +1648,16 @@
     }
 
     parseCtrlMessage = function (message) {
+      // NEW: bus/ctrl/something
       var levels = message.getDestination().getName().split("/"); // topic levels   geo/bus/1001/001.308820/0103.876270/007/OK  --> geo/bus/VehNum/lat/lon/Route/Status
-      if (levels[1] == "bus") {
+      if (levels[0] == "bus_trak") {
         var vehicle = vehicles[levels[2]];
         if (vehicle == null) {
           alert("No vehicle " + levels[2] + " present.");
           return;
         }
         var messageWindow = new google.maps.InfoWindow();
-        messageWindow.setContent("<h3><b>Bus #" + levels[2] + "</b> has reported status: <b>" + levels[3] + "</b></h3>");
+        messageWindow.setContent("<h3 style=\"color:#333;\"><b>Bus #" + levels[2] + "</b> has reported status: <b>" + levels[3] + "</b></h3>");
         console.log(message.getBinaryAttachment());
 
         messageWindow.open(map, vehicle["marker"]);
@@ -1627,12 +1666,12 @@
         });
         vehicle["marker"].setIcon(icon_bus_med_msg);
         vehicle["marker"].setAnimation(google.maps.Animation.BOUNCE);
-        vehicle["marker"].setZIndex(globalZindex + 100);  // pop to top
+        //vehicle["marker"].setZIndex(globalZindex + 100);  // pop to top
       } else if (levels[1] == "route") {
         for (var i = 1000; i < 10000; i++) { //var key in vehicles) {
-          if (vehicles[i] != null && vehicles[i]["route"] == levels[2]) {
+          if (vehicles[i] != null && vehicles[i].payload.routeNum == levels[2]) {
             vehicles[i]["marker"].setIcon(icon_bus_med_msg);
-            vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
+            //vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
           }
         }
       }
@@ -1651,19 +1690,19 @@
           return;
         }
         var messageWindow = new google.maps.InfoWindow();
-        messageWindow.setContent('<h3><b>' + message.getBinaryAttachment() + '</b></h3>');
+        messageWindow.setContent('<h3 style=\"color:#333;\"><b>' + message.getBinaryAttachment() + '</b></h3>');
         messageWindow.open(map, vehicle["marker"]);
         google.maps.event.addListener(messageWindow, 'closeclick', function () {
           vehicle["marker"].setAnimation(google.maps.Animation.NONE);
         });
         vehicle["marker"].setIcon(icon_bus_med_msg);
         vehicle["marker"].setAnimation(google.maps.Animation.BOUNCE);
-        vehicle["marker"].setZIndex(globalZindex + 100);  // pop to top
+        //vehicle["marker"].setZIndex(globalZindex + 100);  // pop to top
       } else if (levels[1] == "route") {
         for (var i = 1000; i < 10000; i++) { //var key in vehicles) {
-          if (vehicles[i] != null && vehicles[i]["route"] == levels[2]) {
+          if (vehicles[i] != null && vehicles[i].payload.route == levels[2]) {
             vehicles[i]["marker"].setIcon(icon_bus_med_msg);
-            vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
+            // vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
             vehicles[i]["marker"].setAnimation(google.maps.Animation.BOUNCE);
           }
         }
@@ -1671,7 +1710,7 @@
         for (var i = 1000; i < 10000; i++) { //var key in vehicles) {
           if (vehicles[i] != null) {
             vehicles[i]["marker"].setIcon(icon_bus_med_msg);
-            vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
+            // vehicles[i]["marker"].setZIndex(globalZindex++);  // pop to top
             vehicles[i]["marker"].setAnimation(google.maps.Animation.BOUNCE);
           }
         }
@@ -1685,15 +1724,14 @@
       var contentString = '<div id="content">';
       if (vehNum >= 1000 && vehNum < 10000) {   // bus
         var bus = vehicles[vehNum];
-        contentString = '<h2 id="firstHeading" class="firstHeading" style="color:#333;">Route ' + bus["route"] + '</h2>' +
-          '<div id="bodyContent"><p style="color:#333;">' +
-          '<b>Bus Number:</b> ' + vehNum + '<br/>' +
-          '<b>Current Position:</b> ' + bus["marker"].getPosition().lat().toFixed(4) + 'N,' + bus["marker"].getPosition().lng().toFixed(4) + 'E<br/>' +
-          '<b>Status:</b> ' + bus["payload"].status + '<br/>' +
-          '<b>Speed:</b> ' + bus["payload"].speed +
-          '<p/><br/><p style="color:#333;"><b>Topic:</b><br/><span style="background-color: #333; color:#aaa;"<b><code>' + makeHtmlColors(topic) + '</code></b></span>' +  // new for mark
-          // '<b>Destination:</b> ' + endAddr +
-          '</p>';
+        contentString = '<h2 id="firstHeading" class="firstHeading" style="color:#333;">Route ' + bus.payload.routeNum + '</h2>';
+        contentString += '<div id="bodyContent"><p style="color:#333;">';
+        contentString += '<b>Bus Number:</b> ' + vehNum + '<br/>';
+        contentString += '<b>Current Position:</b> ' + bus["marker"].getPosition().lat().toFixed(4) + 'N,' + bus["marker"].getPosition().lng().toFixed(4) + 'E<br/>';
+        contentString += '<b>Status:</b> ' + bus["payload"].status + '<br/>';
+        contentString += '<b>Speed:</b> ' + bus["payload"].speed + '<br/>';
+        contentString += '<b>Heading:</b> ' + bus["payload"].heading + '</p>';
+        contentString += '<br/><p style="color:#333;"><b>Topic:</b><br/><span style="background-color: #333; color:#aaa;"<b><code>' + makeHtmlColors(topic) + '</code></b></span></p>';
         // if (img != null) {
         //   contentString += '<p align="center"><img src="' + img + '"></p>';
         // }
@@ -1703,44 +1741,67 @@
 
     }
 
+    var sizes = [];
+    // markers
+    sizes[11] = new google.maps.Size(16,16);
+    sizes[12] = new google.maps.Size(20,20);
+    sizes[13] = new google.maps.Size(24,24);
+    sizes[14] = new google.maps.Size(28,28);
+    // buses
+    sizes[15] = new google.maps.Size(48,48);
+    sizes[16] = new google.maps.Size(64,64);
+    sizes[17] = new google.maps.Size(80,80);
+    sizes[18] = new google.maps.Size(100,100);
+    sizes[19] = new google.maps.Size(128,128);
+    sizes[20] = new google.maps.Size(128,128);
+
     function setBusIcon(vehNum) {
       var status = vehicles[vehNum]["payload"].status;
-      var marker = vehicles[vehNum]["marker"];
-      if (map.getZoom() <= 12) {  // small
-        if (status == "STOPPED") {
-          marker.setIcon(icon_bus_small_stop);
-        } else if (status == "OK") {
-          marker.setIcon(icon_bus_small_ok);
-        } else {  // must be a fault of some kind
-          marker.setIcon(icon_bus_small_fault);
-          marker.setZIndex(globalZindex + 100);
+      //var marker = vehicles[vehNum]["marker"];
+      //marker.setIcon(icon_buses[0]);
+      // console.log(vehicles[vehNum]);
+      var bus = vehicles[vehNum];
+      var headingIndex = Math.floor((bus.payload.heading +5) / 10) % 36;
+      if (zoomLevel <= 14) {  // marker
+        bus.marker.setIcon(icon_markers[headingIndex]);
+        // temporary:
+        if (bus.payload.status.indexOf("FAULT") == 0) bus.marker.setIcon(icon_bus_med_fault);
+        if (zoomLevel < 11) {
+          bus.marker.getIcon().scaledSize = new google.maps.Size(12,12);
+          bus.marker.getIcon().anchor = { x: 6, y: 6 };
+        } else {  // it's in 11..15
+          var anchorPoint = sizes[zoomLevel].width / 2;
+          bus.marker.getIcon().scaledSize = sizes[zoomLevel];
+          bus.marker.getIcon().anchor = { x: anchorPoint, y: anchorPoint };
         }
-      } else {
-        if (status == "STOPPED") {
-          marker.setIcon(icon_bus_med_stop);
-        } else if (status == "OK") {
-          marker.setIcon(icon_bus_med_ok);
-        } else {  // must be a fault of some kind
-          marker.setIcon(icon_bus_med_fault);
-          marker.setZIndex(globalZindex + 100);
+      } else {  // buses
+        bus.marker.setIcon(icon_buses[headingIndex]);
+        // temporary:
+        if (bus.payload.status.indexOf("FAULT") == 0) bus.marker.setIcon(icon_bus_med_fault);
+        if (zoomLevel > 20) {
+          bus.marker.getIcon().scaledSize = new google.maps.Size(128,128);
+          bus.marker.getIcon().anchor = { x: 64, y: 64 };
+        } else {  // it's in 16..20
+          var anchorPoint = sizes[zoomLevel].width / 2;
+          bus.marker.getIcon().scaledSize = sizes[zoomLevel];
+          bus.marker.getIcon().anchor = { x: anchorPoint, y: anchorPoint };
         }
       }
     }
 
     parseGeoMessage = function (message) {
-      // var payload = 0;
-      // if (message.getXmlContent() != null) payload += message.getXmlContent().length;
-      // if (message.getBinaryAttachment() != null) payload += message.getBinaryAttachment().length;
-      //console.log("Received message on: "+message.getDestination().getName()+"  ("+payload+" bytes)");
-      var levels = message.getDestination().getName().split("/"); // topic levels   geo/bus/1001/001.308820/0103.876270/007/OK  --> geo/bus/VehNum/lat/lon/Route/Status
-      // var vehNum = levels.slice(4).join("/"); // essentially, the client name
-      var vehType = levels[1];
-      var vehNum = +levels[2];// * 1;
-      var lat = +levels[3];// * 1;
-      var lon = +levels[4];// * 1;
+      var levels = message.getDestination().getName().split("/"); // topic levels
       var payload = JSON.parse(getTextPayload(message));
-      var newone = false;
-      //if (vehNum == 1000) console.log(payload);
+      // bad, don't rely on topics
+      // var vehType = levels[0];
+      // var vehNum = +levels[6];// * 1;
+      // var lat = +levels[3];// * 1;
+      // var lon = +levels[4];// * 1;
+      var vehType = "bus";
+      var vehNum = payload.busNum;
+      var lat = payload.latitude;
+      var lon = payload.longitude;
+      var newOneEnteringShape = false;
       var vehicle;  // for later
       // now, have we seen this guy before?
       if (!(vehNum in vehicles)) {  // brand new guy!
@@ -1751,11 +1812,11 @@
         // vehicles[vehNum]["lonOff"] = Math.random() / 20000;
         vehicle["marker"] = new google.maps.Marker({
           // vehicles[vehNum]["marker"] = new MarkerWithLabel({
-          zIndex: globalZindex++,
+          zIndex: 1000000-(10000*lat),  // globalZindex++,
         });
         // if they click the icon, pop up a window
         google.maps.event.addListener(vehicle["marker"], 'click', function () {
-          vehicle["marker"].setZIndex(globalZindex++);  // pop to top
+          //vehicle["marker"].setZIndex(globalZindex++);  // pop to top
           vehicle["infoWindow"] = new google.maps.InfoWindow();
           // populate with something
           //vehicle["infoWindow"].setContent(buildBusInfoWindowContent(vehNum,message.getDestination().getName()));
@@ -1768,7 +1829,7 @@
         });
         // now, is it coming into our search area?
         if (totalSearchShapes > 0) {
-          newone = true;  // we'll do a special marker later on
+          newOneEnteringShape = true;  // we'll do a special marker later on
           // console.log(">>> BUS ENTER: "+vehNum);
           var fenceMessage = solace.SolclientFactory.createMessage();
           var topicName = "geo/fence/" + fenceUid + "/enter/" + vehNum + "/" + levels[5];  // geo/fence/abcd/enter/1037/003 (route num at end)
@@ -1793,12 +1854,15 @@
       vehicle["pos"] = new google.maps.LatLng(lat, lon);
       vehicle["marker"].setPosition(vehicle["pos"]);
       vehicle["marker"].setAnimation(google.maps.Animation.NONE);
+      vehicle["marker"].setZIndex(1000000-(10000*lat));  // globalZindex++,
+
       vehicle["payload"] = payload;
       if (vehType == "bus") {
-        vehicle["route"] = +levels[5];  // numeric representation
+        //vehicle["route"] = +levels[5];  // numeric representation
         setBusIcon(vehNum);
-        if (newone) {
-          vehicle["marker"].setIcon(map.getZoom() <= 12 ? icon_bus_small_msg : icon_bus_med_msg);
+        if (newOneEnteringShape) {
+          // vehicle["marker"].setIcon(map.getZoom() <= 12 ? icon_bus_small_msg : icon_bus_med_msg);
+          vehicle.marker.setIcon(icon_bus_white_arrow);
           vehicle["marker"].setAnimation(google.maps.Animation.DROP);
         }
       } else if (vehType == "taxi") {
@@ -1821,7 +1885,7 @@
         vehicle["marker"].setMap(map);
       }
       vehicle["ts"] = Date.now();
-      vehicle["infoWindowContent"] = buildBusInfoWindowContent(levels[2], message.getDestination().getName());
+      vehicle["infoWindowContent"] = buildBusInfoWindowContent(vehNum, message.getDestination().getName());
       if (vehicle["infoWindow"] != null) {
         // update it
         vehicle["infoWindow"].setContent(vehicle["infoWindowContent"]);
@@ -1860,7 +1924,7 @@
       var maxp = 100;
       // The result should be between 4 and 2000
       var minv = Math.log(4);
-      var maxv = Math.log(800);
+      var maxv = Math.log(1500);
       // calculate adjustment factor
       var scale = (maxv - minv) / (maxp - minp);
       return Math.round(Math.exp(minv + scale * (position - minp)));
@@ -1904,20 +1968,20 @@
           <table>
             <tr>
               <td align="left">
-                <button id="addCircleButton" onclick="addNewCircle(); updateSearch()">Add Circle</button>
+                <button id="addCircleButton" onclick="addNewCircle(); updateSearch()">Add <span style="color:#f71; font-weight: 900;">Circle</span></button>
               </td>
               <td align="right">
-                <button id="addPolyButton" onclick="addNewPoly(); updateSearch();">Add Polygon</button>
+                <button id="addPolyButton" onclick="addNewPoly(); updateSearch();">Add <span style="color:#f71; font-weight: 900;">Polygon</span></button>
               </td>
             </tr>
             <tr>
               <td align="left">
-                <button id="addRectButton" onclick="addNewRect(); updateSearch();">Add Rect</button>
+                <button id="addRectButton" onclick="addNewRect(); updateSearch();">Add <span style="color:#f71; font-weight: 900;">Rect</span></button>
               </td>
               <td align="right">
                 <button id="removeAllShapesButton"
-                  onclick="clearAllShapes(); document.getElementById('curSubs').innerHTML = '1'; document.getElementById('curAccuracy').innerHTML = '100';">Remove
-                  All Shapes</button>
+                  onclick="clearAllShapes(); document.getElementById('curSubs').innerHTML = '1'; document.getElementById('curAccuracy').innerHTML = '<span style=\'font-size: 80%\'>N/A</span>';">Remove
+                  <span style="color:#f71; font-weight: 900;">Shapes</span></button>
               </td>
             </tr>
           </table>
@@ -1956,7 +2020,7 @@
               </td>
               <td style="padding: 2px 0px">
                 <!--input type=range min=0 max=100 value=63 id=fader oninput="outputSubUpdate(value)" onchange="updateSearch()"-->
-                <input class="slider" type=range min=0 max=100 value=69 id=fader oninput="outputSubUpdate(value)"
+                <input class="slider" type=range min=0 max=100 value=73 id=fader oninput="outputSubUpdate(value)"
                   onchange="updateSearch()">
                 <output for=fader id=subs class="newSliders">300</output>
                 <script>
@@ -1990,19 +2054,31 @@
         <td>
           <table>
             <tr>
-              <td>Filter by <b>Vehicle</b> number:</td>
-              <td><input type="text" id="vehNum" onchange="updateSearch()" size="4" /></td>
-            </tr>
-            <tr>
-              <td>Filter by <b>Route</b> number:</td>
+              <td>Filter by <span style="color:#ff0; font-weight: 900;">Route</span> number:</td>
               <td><input type="text" id="routeNum" onchange="updateSearch()" size="4" /></td>
             </tr>
             <tr>
-              <td colspan="2">Filter by <b>Status:</b>&nbsp;&nbsp;
+              <td>Filter by <span style="color:#f5f; font-weight: 900;">Vehicle</span> number:</td>
+              <td><input type="text" id="vehNum" onchange="updateSearch()" size="4" /></td>
+            </tr>
+            <tr>
+              <td>Filter by <span style="color:#0ff; font-weight: 900;">Heading:</span></td>
+              <td>
+                <select id="heading" class="decorated" onchange="updateSearch()">
+                  <option value="*">&nbsp;&nbsp;Any&nbsp;&nbsp;</option>
+                  <option value="0*">&nbsp;&nbsp;NE</option>
+                  <option value="1*">&nbsp;&nbsp;SE</option>
+                  <option value="2*">&nbsp;&nbsp;SW</option>
+                  <option value="3*">&nbsp;&nbsp;NW</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">Filter by <span style="color:#fff; font-weight: 900;">Status:</span>&nbsp;&nbsp;
                 <select id="status" class="decorated" onchange="updateSearch()">
-                  <option value="any">Any</option>
-                  <option value="OK">In Motion</option>
-                  <option value="STOPPED">At Bus Stop</option>
+                  <option value="any">&nbsp;Any</option>
+                  <option value="OK">&nbsp;In Motion</option>
+                  <option value="STOPPED">&nbsp;At Bus Stop</option>
                   <option value="FAULT">Broken Down</option>
                 </select>
               </td>
@@ -2012,9 +2088,9 @@
       </tr>
       <tr>
         <td>
-          <button id="heatButton"
-            onclick="heatmap.setMap(heatmap.getMap() ? null : map); if (heatmap.getMap() && zoomLevel < 13) map.setZoom(13);">Toggle
-            Heatmap</button>
+          <!--button id="heatButton" onclick="heatmap.setMap(heatmap.getMap() ? null : map); if (heatmap.getMap() && zoomLevel < 13) map.setZoom(13);">Toggle Heatmap</button-->
+          <button onclick='window.open("http://worldcomp-proceedings.com/proc/p2016/ICM3967.pdf", "_blank");'>See the Algo&nbsp;</button>
+          <button onclick='window.open("https://github.com/aaron-613/pubsub-geo-filtering", "_blank");'>&nbsp;See the Code</button>
         </td>
       </tr>
     </table>
@@ -2027,7 +2103,8 @@
           <img src="solace-logo.png"/>
           <h1>Real-time Connected Buses Demo</h1>
           <p />
-          <h3>Bidirectional IoT Communication using MQTT<br>Advanced Filtering and Routing Capabilities</h3>
+          <!--h3>Bidirectional IoT Communication using MQTT<br><a href="http://worldcomp-proceedings.com/proc/p2016/ICM3967.pdf" taret="_blank"><h3>Advanced Filtering and Routing Capabilities</h3></a></h3-->
+          <h3>Bidirectional IoT Communication using<br>Advanced Filtering and Routing Capabilities</h3>
         </td>
       </tr>
     </table>
@@ -2035,12 +2112,13 @@
 
 
   </div>
-  <!-- <div id="over_map_busapp_qr">
+<!--   
+  <div id="over_map_busapp_qr">
     <table>
       <tr>
-        <td style="text-align:right"><img width="75" padding="0" margin="10" src="qr-busapp.png" /></td>
+        <td style="text-align:right"><a href="https://sg.solace.com/busapp/" target="_blank"><img width="75" padding="0" margin="10" src="qr-busapp.png" /></a></td>
         <td style="padding-left:10px; padding-bottom:5px;">
-          <h2>Bus<br />Driver<br />App</h2>
+          <a href="https://sg.solace.com/busapp/" target="_blank"><h2>Bus<br />Driver<br />App</h2></a>
         </td>
       </tr>
     </table>
@@ -2074,7 +2152,7 @@
           <h3>Coverage Accuracy:</h3>
         </td>
         <td>
-          <h3><span id='curAccuracy'>100</span>%</h3>
+          <h3><span id='curAccuracy'><span style="font-size: 80%">N/A</span></span></h3>
         </td>
       </tr>
       <tr>
@@ -2087,7 +2165,7 @@
       </tr>
     </table>
   </div>
-
+<!-- 
   <div id="over_map_fence">
     <table>
       <tr>
@@ -2097,29 +2175,31 @@
         </td>
       </tr>
     </table>
-  </div>
+  </div> -->
 
   <div id="real-time-topics">
     <table>
       <tr>
-        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa;'>
-        <!--         const levelColors = [ '#fff', '#5f5', '#f5f', '#0ff', '#ff0', '#58f', '#f85' ]; -->
-        <span style="color:#fff">geo</span
-          >/<span style="color:#5f5;">bus</span
-          >/<span style="color:#f5f;">{busNum}</span
-          >/<span style="color:#0ff;">{lat}</span
-          >/<span style="color:#ff0;">{lon}</span
-          >/<span style="color:#58f;">{routeNum}</span
-          >/<span style="color:#f55;">{status}</span>
+        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa; padding: 0px 0px 2px;'>
+        <!--       const levelColors = [ '#aaa', '#5f5', '#58f', '#ff0', '#f5f', '#f73', '#f73', '#0ff', '#fff', '#888' ]; -->
+        <span style="color:#aaa">bus_trak</span
+          >/<span style="color:#5f5;">gps</span
+          >/<span style="color:#58f;">v2</span
+          >/<span style="color:#ff0;">{route}</span
+          >/<span style="color:#f5f;">{busID}</span
+          >/<span style="color:#f71;">{lat}</span
+          >/<span style="color:#f71;">{lon}</span
+          >/<span style="color:#0ff;">{dir}</span
+          >/<span style="color:#fff;">{status}</span>
         </td>
       </tr>
       <tr>
-        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa;'>
+        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa; padding: 2px 0px;'>
           <span id="topic">&nbsp;</span>
         </td>
       </tr>
       <tr>
-        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa;'>
+        <td style='font-family:  Monaco, "Lucida Console", monospace; font-weight: bold; font-size: 120%; color: #aaa; padding: 2px 0px 0px;'>
           <!--span id="sub"><span style="color:#fff">geo</span>/<span style="color:#5f5;">bus</span>/<span style="color: #fff;">&gt;</span></span-->
           <span id="sub">&nbsp;</span>
         </td>
@@ -2131,7 +2211,7 @@
     <p>abc/abc/123/456</p>
   </div>
   <script>
-   document.getElementById("over_map_fence").style.display = "none";
+  //  document.getElementById("over_map_fence").style.display = "none";
    document.getElementById("topicMO").style.display = "none";
    </script>
 </body>
